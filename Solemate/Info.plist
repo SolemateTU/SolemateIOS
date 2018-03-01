@@ -26,13 +26,15 @@
 	<string>Main</string>
 	<key>NSCameraUsageDescription</key>
 	<string>In order to identify a shoe</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>To allow you to upload photos</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>To save all photos you take</string>
 	<key>LSApplicationCategoryType</key>
 	<string></string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>

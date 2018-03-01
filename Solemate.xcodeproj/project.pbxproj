@@ -13,6 +13,9 @@
 		D97258E3203A398F000ACE77 /* Solemate.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D97258E1203A398F000ACE77 /* Solemate.xcdatamodeld */; };
 		D97258E5203A398F000ACE77 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D97258E4203A398F000ACE77 /* Assets.xcassets */; };
 		D97258E8203A398F000ACE77 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D97258E6203A398F000ACE77 /* LaunchScreen.storyboard */; };
+		D9C4771E20478B200064DAD8 /* shoeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C4771D20478B200064DAD8 /* shoeCell.swift */; };
+		D9C4772020478D000064DAD8 /* solematesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C4771F20478D000064DAD8 /* solematesViewController.swift */; };
+		D9C4772220478DE60064DAD8 /* shoe.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C4772120478DE60064DAD8 /* shoe.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +27,9 @@
 		D97258E4203A398F000ACE77 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D97258E7203A398F000ACE77 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D97258E9203A398F000ACE77 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D9C4771D20478B200064DAD8 /* shoeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = shoeCell.swift; sourceTree = "<group>"; };
+		D9C4771F20478D000064DAD8 /* solematesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = solematesViewController.swift; sourceTree = "<group>"; };
+		D9C4772120478DE60064DAD8 /* shoe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = shoe.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,7 +68,10 @@
 				D97258E4203A398F000ACE77 /* Assets.xcassets */,
 				D97258E6203A398F000ACE77 /* LaunchScreen.storyboard */,
 				D97258E9203A398F000ACE77 /* Info.plist */,
+				D9C4771D20478B200064DAD8 /* shoeCell.swift */,
 				D97258E1203A398F000ACE77 /* Solemate.xcdatamodeld */,
+				D9C4772120478DE60064DAD8 /* shoe.swift */,
+				D9C4771F20478D000064DAD8 /* solematesViewController.swift */,
 			);
 			path = Solemate;
 			sourceTree = "<group>";
@@ -139,8 +148,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D9C4772220478DE60064DAD8 /* shoe.swift in Sources */,
+				D9C4771E20478B200064DAD8 /* shoeCell.swift in Sources */,
 				D97258DD203A398F000ACE77 /* ViewController.swift in Sources */,
 				D97258DB203A398F000ACE77 /* AppDelegate.swift in Sources */,
+				D9C4772020478D000064DAD8 /* solematesViewController.swift in Sources */,
 				D97258E3203A398F000ACE77 /* Solemate.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -279,6 +291,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 554773PTD3;
 				INFOPLIST_FILE = Solemate/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.Uppalled.Solemate;
@@ -293,6 +306,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 554773PTD3;
 				INFOPLIST_FILE = Solemate/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.Uppalled.Solemate;
