@@ -28,7 +28,7 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="K7r-Vf-x0q">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </imageView>
-                            <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ynt-xp-cPa">
+                            <button opaque="NO" alpha="0.94999999999999996" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ynt-xp-cPa">
                                 <rect key="frame" x="150" y="572" width="75" height="75"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
@@ -41,10 +41,10 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eyx-7P-FLz">
-                                <rect key="frame" x="16" y="572" width="75" height="75"/>
+                                <rect key="frame" x="16" y="575" width="68" height="68"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="75" id="RUd-hY-ksL"/>
+                                    <constraint firstAttribute="width" constant="68" id="RUd-hY-ksL"/>
                                     <constraint firstAttribute="width" secondItem="eyx-7P-FLz" secondAttribute="height" multiplier="1:1" id="y7f-kO-zg2"/>
                                 </constraints>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -56,7 +56,7 @@
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="Kp4-6A-fvw" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="1mg-y6-pbJ"/>
-                            <constraint firstItem="eyx-7P-FLz" firstAttribute="firstBaseline" secondItem="Ynt-xp-cPa" secondAttribute="firstBaseline" id="2z3-kj-RcF"/>
+                            <constraint firstItem="eyx-7P-FLz" firstAttribute="firstBaseline" secondItem="Ynt-xp-cPa" secondAttribute="firstBaseline" constant="3" id="2z3-kj-RcF"/>
                             <constraint firstItem="Kp4-6A-fvw" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="3uI-cv-b1D"/>
                             <constraint firstItem="K7r-Vf-x0q" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="-64" id="5EG-ol-sC1"/>
                             <constraint firstItem="eyx-7P-FLz" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="7zZ-E4-a79"/>
@@ -65,12 +65,12 @@
                             <constraint firstItem="Ynt-xp-cPa" firstAttribute="centerX" secondItem="Kp4-6A-fvw" secondAttribute="centerX" id="FYP-tl-Oko"/>
                             <constraint firstItem="Kp4-6A-fvw" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="IRj-wn-Xm4"/>
                             <constraint firstItem="K7r-Vf-x0q" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="aiM-Y9-WR1"/>
-                            <constraint firstItem="eyx-7P-FLz" firstAttribute="top" secondItem="Ynt-xp-cPa" secondAttribute="top" id="bo0-Vp-P6y"/>
+                            <constraint firstItem="eyx-7P-FLz" firstAttribute="top" secondItem="Ynt-xp-cPa" secondAttribute="top" constant="3" id="bo0-Vp-P6y"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="Kp4-6A-fvw" secondAttribute="bottom" id="l9N-4n-zyg"/>
                             <constraint firstAttribute="bottom" secondItem="Ynt-xp-cPa" secondAttribute="bottom" constant="20" symbolic="YES" id="nL6-Ms-mcI"/>
                             <constraint firstItem="K7r-Vf-x0q" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="qR3-HS-j3i"/>
                             <constraint firstItem="K7r-Vf-x0q" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="qhi-1z-u68"/>
-                            <constraint firstItem="eyx-7P-FLz" firstAttribute="baseline" secondItem="Ynt-xp-cPa" secondAttribute="baseline" id="v6k-5E-0bR"/>
+                            <constraint firstItem="eyx-7P-FLz" firstAttribute="baseline" secondItem="Ynt-xp-cPa" secondAttribute="baseline" constant="3" id="v6k-5E-0bR"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
@@ -90,7 +90,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1626" y="-1543"/>
+            <point key="canvasLocation" x="1624.8" y="-1543.1784107946028"/>
         </scene>
         <!--My Solemates-->
         <scene sceneID="Pxr-0C-B9M">

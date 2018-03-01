@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import os.log
 
 class solematesViewController: UITableViewController{
         public var shoeList = [shoe]()
