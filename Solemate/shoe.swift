@@ -12,9 +12,13 @@ import os.log
 
 class shoe: NSObject{
     //add extension for NSCoding
-
+    /*var  image: UIImage
+    var name:String
+    var desc: String
+    var price: Double
+    */
     override init() {
-
+     //   image = UIImage()
     }
     /*
      func encode(with aCoder: NSCoder) {
