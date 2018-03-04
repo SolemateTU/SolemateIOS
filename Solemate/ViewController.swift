@@ -19,14 +19,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     
     @IBOutlet weak var captureButton: UIButton!
     @IBOutlet weak var cameraRoll: UIButton!
-    //augmented reality view provides live camera feed
+    ///Augmented reality view provides live camera feed
     @IBOutlet var sceneView: ARSCNView!
-    // temporary UI label to show results of on-device ML model
+    ///Temporary UI label to show results of on-device ML model
     @IBOutlet var mlText: UILabel!
-    //view controller to choose an image
+    ///View controller to select an image from camera roll
     var imagePicker = UIImagePickerController()
-    
+    ///Holds the selected image to be sent to server
     var selectedImage: UIImage?
+    ///Image view to show selected or captured image
+    @IBOutlet weak var selectedView: UIImageView!
     var currentRecognizedObject: String = ""
 
     override func viewDidLoad() {
@@ -37,7 +39,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         sceneView.scene = scene
         
         //capture button layout
-        captureButton.layer.cornerRadius = captureButton.frame.size.width / 2
+        captureButton.layer.cornerRadius = 37.5
         captureButton.layer.shadowRadius = 3
         captureButton.layer.shadowColor = UIColor.black.cgColor
         captureButton.layer.shadowOffset = CGSize(width: 0, height: 2)
@@ -51,7 +53,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         cameraRoll.layer.shadowOffset = CGSize(width: 0, height: 2)
         cameraRoll.layer.shadowOpacity = 0.6
         cameraRoll.clipsToBounds = false
-        
+ 
         // Tap Gesture Recognizer
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(gestureRecognize:)))
         view.addGestureRecognizer(tapGesture)
@@ -82,7 +84,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         super.viewWillDisappear(animated)
     }
     
-    //a forever loop to keep checking the on-phone ML model for what object is in the screen
+    /**
+     A forever loop to keep checking the on-phone ML model for what object is in the screen
+    */
     func continuouslyUpdate() {
         //use new thread
         DispatchQueue.global().async {
@@ -98,7 +102,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         }
     } // end updateMLlabel
 
-    //function to handle when user taps on screen in AR
+    /**
+     Handles when user taps on screen in AR
+     */
     @objc func handleTap(gestureRecognize: UITapGestureRecognizer) {
         // HIT TEST : REAL WORLD
         // Get Screen Centre
@@ -127,20 +133,40 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         }
     }
 
+    /**
+     Handles selected image
+        - sends it to server
+        - pauses scene view
+        - triggers pop up
+     */
+    func selectedImageHandler(){
+            //shows the selected image
+            selectedView.isHidden = false;
+            selectedView.image = selectedImage
+        
+            //pauses the sceneview and hides it
+            sceneView.pause(Any?.self)
+            sceneView.isHidden = true;
+        
+            //Stop ML Model from running
+        
+            //Send to server
+        
+        
+            //Trigger Pop Up
+        
+        
+    }
     
-    //user has picked an image and now we want to do something with it
+    //handling the selection from camera roll
     func imagePickerController(_ picker: UIImagePickerController,
                                didFinishPickingMediaWithInfo info: [String : Any]){
         //make sure an image was picked
         if let imagePicked = info[UIImagePickerControllerOriginalImage] as? UIImage {
-            
-        //if user is using camera, save the selected photo to camera roll
-        if (imagePicker.sourceType == .camera)  {
-            UIImageWriteToSavedPhotosAlbum(imagePicked, nil, nil, nil)
-        }
         //set the selected image to be passed to server for recognition
         selectedImage = imagePicked
         //dismiss the image picker
+         selectedImageHandler()
         imagePicker.dismiss(animated: true, completion: nil)
     }
     }// end imagePickerController
@@ -183,20 +209,33 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         updateMLlabel(results: firstResult)
     } //end detect
 
-    // when camera button is tapped, present this view controller to the user
+    /**
+     When capture button is tapped, it takes the picture and writes it to the camera roll
+     
+     - Parameters:
+        - sender: captureButton
+     */
     @IBAction func cameraTapped(_ sender: UIButton) {
-        imagePicker.delegate = self
-        imagePicker.sourceType = .camera //easiest way of implementing camera functionality in any app
-        imagePicker.allowsEditing = false
-        present (imagePicker, animated: true, completion: nil)
+      //  imagePicker.delegate = self
+      //  imagePicker.sourceType = sceneView.sc //easiest way of implementing camera functionality in any app
+        selectedImage = sceneView.snapshot()
+        UIImageWriteToSavedPhotosAlbum(selectedImage!, nil, nil, nil)
+        //trigger the selected view
+        selectedImageHandler()
     }
-    // when photo library button is tapped, present this view controller to the user
-
+    
+    /**
+     When photo library button is tapped, This view controller is presented to the user
+     
+     - Parameters:
+        - sender: cameraRoll button
+     */
     @IBAction func photoLibraryTapped(_ sender: UIButton) {
         imagePicker.delegate = self
         imagePicker.sourceType = .photoLibrary //easiest way of implementing photo library functionality in any app
         imagePicker.allowsEditing = false
         present (imagePicker, animated: true, completion: nil)
+        
     }
     
     
