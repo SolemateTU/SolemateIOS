@@ -3,34 +3,39 @@
 //  Solemate
 //
 //  Created by Harjap Uppal on 2/18/18.
+// modified by Bill Moriarty 3/3/2018
 //  Copyright © 2018 Uppalled. All rights reserved.
 //
 
 import UIKit
+import ARKit
+import SpriteKit
 import AVFoundation
+import CoreML
+import Vision
 
-class ViewController: UIViewController {
-    //Outlets
-    @IBOutlet weak var previewView: UIView!
+class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    
     @IBOutlet weak var captureButton: UIButton!
     @IBOutlet weak var cameraRoll: UIButton!
-    @IBOutlet weak var selectedView: UIImageView!
+    //augmented reality view provides live camera feed
+    @IBOutlet var sceneView: ARSCNView!
+    // temporary UI label to show results of on-device ML model
+    @IBOutlet var mlText: UILabel!
+    //view controller to choose an image
+    var imagePicker = UIImagePickerController()
     
-    //Camera
-    var captureSession: AVCaptureSession?
-    var capturePhotoOutput: AVCapturePhotoOutput?
-    var videoPreviewLayer: AVCaptureVideoPreviewLayer?
     var selectedImage: UIImage?
-    
-    //Camera Roll
-    let imagePicker = UIImagePickerController()
-    
+    var currentRecognizedObject: String = ""
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        selectedView.isHidden = true
-        //imagePicker
-        imagePicker.delegate = self as UIImagePickerControllerDelegate & UINavigationControllerDelegate
-
+        // Create a new scene
+        let scene = SCNScene()
+        // Set the scene to the view
+        sceneView.scene = scene
+        
         //capture button layout
         captureButton.layer.cornerRadius = captureButton.frame.size.width / 2
         captureButton.layer.shadowRadius = 3
@@ -47,147 +52,152 @@ class ViewController: UIViewController {
         cameraRoll.layer.shadowOpacity = 0.6
         cameraRoll.clipsToBounds = false
         
-        // Get an instance of the AVCaptureDevice class to initialize a device object and provide the video as the media type parameter
-        guard let captureDevice = AVCaptureDevice.default(for: AVMediaType.video) else {
-            fatalError("No video device found")
-        }
+        // Tap Gesture Recognizer
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(gestureRecognize:)))
+        view.addGestureRecognizer(tapGesture)
         
-        do {
-            let input = try AVCaptureDeviceInput(device: captureDevice)
-            
-            // Initialize the captureSession object
-            captureSession = AVCaptureSession()
-            
-            // Set the input devcie on the capture session
-            captureSession?.addInput(input)
-            
-            // Get an instance of ACCapturePhotoOutput class
-            capturePhotoOutput = AVCapturePhotoOutput()
-            capturePhotoOutput?.isHighResolutionCaptureEnabled = true
-            
-            // Set the output on the capture session
-            captureSession?.addOutput(capturePhotoOutput!)
-            
-            // Initialize a AVCaptureMetadataOutput object and set it as the input device
-            let captureMetadataOutput = AVCaptureMetadataOutput()
-            captureSession?.addOutput(captureMetadataOutput)
-            
-            // Set delegate and use the default dispatch queue to execute the call back
-            captureMetadataOutput.setMetadataObjectsDelegate(self as? AVCaptureMetadataOutputObjectsDelegate, queue: DispatchQueue.main)
-            captureMetadataOutput.metadataObjectTypes = [AVMetadataObject.ObjectType.qr]
-            
-            //Initialise the video preview layer and add it as a sublayer to the viewPreview view's layer
-            videoPreviewLayer = AVCaptureVideoPreviewLayer(session: captureSession!)
-            videoPreviewLayer?.videoGravity = AVLayerVideoGravity.resizeAspectFill
-            videoPreviewLayer?.frame = view.layer.bounds
-            previewView.layer.addSublayer(videoPreviewLayer!)
-            
-            //start session
-            captureSession?.startRunning()
-            
-            
-        } catch {
-            print(error)
+        //temporary UI label to display recognized object
+        mlText.frame = CGRect(x: 0, y: self.sceneView.frame.height-300, width: self.sceneView.frame.width, height: 66)
+        mlText.textAlignment = .center
         }
-    }
-
-   /* override func viewDidLayoutSubviews() {
-        videoPreviewLayer?.frame = view.bounds
-        if let previewLayer = videoPreviewLayer ,(previewLayer.connection?.isVideoOrientationSupported)! {
-            previewLayer.connection?.videoOrientation = UIApplication.shared.statusBarOrientation.videoOrientation ?? .portrait
-        }
-    }*/
     
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
-    // MARK: - Actions
-
-    //Capture image on tap
-    @IBAction func onTapCapture(_ sender: Any) {
-        // Make sure capturePhotoOutput is valid
-        guard let capturePhotoOutput = self.capturePhotoOutput else { return }
-        // Set photo settings
-        let photoSettings = AVCapturePhotoSettings()
-        
-        photoSettings.isAutoStillImageStabilizationEnabled = true
-        photoSettings.isHighResolutionPhotoEnabled = true
-        photoSettings.flashMode = .off
-        // Call capturePhoto method by passing our photo settings and a delegate implementing AVCapturePhotoCaptureDelegate
-        capturePhotoOutput.capturePhoto(with: photoSettings, delegate: self)
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        let configuration = ARWorldTrackingConfiguration()
+        sceneView.session.run(configuration)
+        //continuously check the ML model
+        continuouslyUpdate()
     }
-    @IBAction func loadCameraRoll(_ sender: Any) {
+    
+    override func viewDidAppear(_ animated: Bool) {
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+    }
+    
+    //a forever loop to keep checking the on-phone ML model for what object is in the screen
+    func continuouslyUpdate() {
+        //use new thread
+        DispatchQueue.global().async {
+            self.detect()
+            self.continuouslyUpdate()
+        }
+    }
+    
+    func updateMLlabel(results: String) {
+        //use main thread - required
+        DispatchQueue.main.sync {
+            self.mlText.text = results
+        }
+    } // end updateMLlabel
+
+    //function to handle when user taps on screen in AR
+    @objc func handleTap(gestureRecognize: UITapGestureRecognizer) {
+        // HIT TEST : REAL WORLD
+        // Get Screen Centre
+        let screenCentre : CGPoint = CGPoint(x: self.sceneView.bounds.midX, y: self.sceneView.bounds.midY)
+        
+        let arHitTestResults : [ARHitTestResult] = sceneView.hitTest(screenCentre, types: [.featurePoint])
+        
+        if let closestResult = arHitTestResults.first {
+            // Get Coordinates of HitTest
+            let transform : matrix_float4x4 = closestResult.worldTransform
+            let worldCoord : SCNVector3 = SCNVector3Make(transform.columns.3.x, transform.columns.3.y, transform.columns.3.z)
+            
+            //create an augmented reality text label it at that position
+            let labelNode = SCNText(string: self.currentRecognizedObject, extrusionDepth: CGFloat(0.01))
+            labelNode.firstMaterial?.diffuse.contents = UIColor.white
+            labelNode.font=UIFont(name: "Futura", size: 0.12)
+            labelNode.chamferRadius = CGFloat(0.01)
+            labelNode.alignmentMode = kCAAlignmentCenter
+
+            let labelNodeParent = SCNNode(geometry: labelNode)
+            labelNodeParent.scale = SCNVector3Make(0.2, 0.2, 0.2)
+            labelNodeParent.position = worldCoord
+            labelNodeParent.position.x = labelNodeParent.position.x/2
+            labelNodeParent.position.y = labelNodeParent.position.y/2
+            sceneView.scene.rootNode.addChildNode(labelNodeParent)
+        }
+    }
+
+    
+    //user has picked an image and now we want to do something with it
+    func imagePickerController(_ picker: UIImagePickerController,
+                               didFinishPickingMediaWithInfo info: [String : Any]){
+        //make sure an image was picked
+        if let imagePicked = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            
+        //if user is using camera, save the selected photo to camera roll
+        if (imagePicker.sourceType == .camera)  {
+            UIImageWriteToSavedPhotosAlbum(imagePicked, nil, nil, nil)
+        }
+        //set the selected image to be passed to server for recognition
+        selectedImage = imagePicked
+        //dismiss the image picker
+        imagePicker.dismiss(animated: true, completion: nil)
+    }
+    }// end imagePickerController
+    
+    //method to query on-phone ML model by taking the ARKit sceneview's current frame
+    func detect(){
+        guard let model = try? VNCoreMLModel(for: Inceptionv3().model) else{
+            fatalError("loading core ML model failed")
+        }
+        var firstResult = String ("")
+        //get the current camera frame from the live AR session
+        let tempImage : CVPixelBuffer? = (sceneView.session.currentFrame?.capturedImage)
+        if tempImage == nil { return }
+        let tempciImage = CIImage(cvPixelBuffer: tempImage!)
+
+        //initiate the request
+        let request = VNCoreMLRequest(model: model) { (request, error) in
+            //process the result of the request
+            guard let results = request.results as? [VNClassificationObservation] else {
+                fatalError("model failed to process image")
+            }
+            //format the result into a string
+            firstResult = results.first.flatMap({ $0 as VNClassificationObservation })
+                .map({ "\($0.identifier) \(String(format:"- %.2f", $0.confidence))" })!
+            print(firstResult )
+        }
+        //crop just the center of the captured camera frame to send to the ML model
+        request.imageCropAndScaleOption=VNImageCropAndScaleOption.centerCrop
+        
+        let handler = VNImageRequestHandler(ciImage: tempciImage)
+        do {
+            //send the request to the model
+            try handler.perform([request])
+        } catch {
+            print(error)
+        }
+        
+        //update global currentRecognizedObject
+        self.currentRecognizedObject = firstResult
+        updateMLlabel(results: firstResult)
+    } //end detect
+
+    // when camera button is tapped, present this view controller to the user
+    @IBAction func cameraTapped(_ sender: UIButton) {
+        imagePicker.delegate = self
+        imagePicker.sourceType = .camera //easiest way of implementing camera functionality in any app
         imagePicker.allowsEditing = false
-        imagePicker.sourceType = .photoLibrary
-        present(imagePicker, animated: true, completion: nil)
+        present (imagePicker, animated: true, completion: nil)
     }
-    
-}
+    // when photo library button is tapped, present this view controller to the user
 
-// MARK: - AVCapturePhotoCaptureDelegate Functions
-extension ViewController : AVCapturePhotoCaptureDelegate {
-    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
-        
-        // Check if there is any error in capturing
-        guard error == nil else {
-            print("Fail to capture photo: \(String(describing: error))")
-            return
-        }
-        
-        // Check if the pixel buffer could be converted to image data
-        guard let imageData = photo.fileDataRepresentation() else {
-            print("Fail to convert pixel buffer")
-            return
-        }
-        
-        // Check if UIImage could be initialized with image data
-        guard let capturedImage = UIImage.init(data: imageData , scale: 1.0) else {
-            print("Fail to convert image data to UIImage")
-            return
-        }
-        
-       UIImageWriteToSavedPhotosAlbum(capturedImage, nil, nil, nil)
-       
-        //set the selected image to be passed to server for recognition
-        
-        selectedImage = capturedImage
-        previewView.isHidden = true
-        captureSession?.stopRunning()
-        selectedView.isHidden = false
-        selectedView.image = capturedImage
-        selectedView.contentMode = .scaleToFill
-        // pop up
+    @IBAction func photoLibraryTapped(_ sender: UIButton) {
+        imagePicker.delegate = self
+        imagePicker.sourceType = .photoLibrary //easiest way of implementing photo library functionality in any app
+        imagePicker.allowsEditing = false
+        present (imagePicker, animated: true, completion: nil)
     }
     
     
-    }
-
-// MARK: - UIImagePickerControllerDelagate Functions
-extension ViewController : UIImagePickerControllerDelegate, UINavigationControllerDelegate{
-    private func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-
-    if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
-        print("started")
-
-       selectedView.isHidden = false
-       selectedView.contentMode = .scaleAspectFit
-       selectedView.image = pickedImage
-       previewView.isHidden = true
-        //set the selected image to be passed to server for recognition
-        selectedImage = pickedImage
-        captureSession?.stopRunning()
-    }
-       
-        dismiss(animated: true, completion: nil)
-}
-
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-    dismiss(animated: true, completion: nil)
-}
-    
-}
-
-
-
+    }//end class ViewController
