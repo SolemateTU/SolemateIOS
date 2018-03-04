@@ -6,7 +6,6 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
-        <capability name="Alignment constraints to the first baseline" minToolsVersion="6.0"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -17,11 +16,11 @@
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="Solemate" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                    <view key="view" contentMode="scaleToFill" id="t06-IE-3jY">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Kp4-6A-fvw">
+                            <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kYF-Qb-z8r">
                                 <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
@@ -32,12 +31,12 @@
                                 <rect key="frame" x="150" y="572" width="75" height="75"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="75" id="J0G-gl-Qfq"/>
-                                    <constraint firstAttribute="width" secondItem="Ynt-xp-cPa" secondAttribute="height" multiplier="1:1" id="ege-VN-gVt"/>
+                                    <constraint firstAttribute="width" secondItem="IlH-Ig-dbC" secondAttribute="height" multiplier="1:1" id="F6Q-X9-wDa"/>
+                                    <constraint firstAttribute="width" constant="75" id="FMT-K6-uYE"/>
+                                    <constraint firstAttribute="height" constant="75" id="XwU-Dw-bEs"/>
                                 </constraints>
-                                <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>
-                                    <action selector="onTapCapture:" destination="BYZ-38-t0r" eventType="touchUpInside" id="2ot-a3-T3B"/>
+                                    <action selector="cameraTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="vLE-7Q-9SZ"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eyx-7P-FLz">
@@ -47,13 +46,12 @@
                                     <constraint firstAttribute="width" constant="68" id="RUd-hY-ksL"/>
                                     <constraint firstAttribute="width" secondItem="eyx-7P-FLz" secondAttribute="height" multiplier="1:1" id="y7f-kO-zg2"/>
                                 </constraints>
-                                <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>
-                                    <action selector="loadCameraRoll:" destination="BYZ-38-t0r" eventType="touchUpInside" id="pLM-H2-E1Y"/>
+                                    <action selector="photoLibraryTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="npt-Pp-SLO"/>
                                 </connections>
                             </button>
                         </subviews>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="Kp4-6A-fvw" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="1mg-y6-pbJ"/>
                             <constraint firstItem="eyx-7P-FLz" firstAttribute="firstBaseline" secondItem="Ynt-xp-cPa" secondAttribute="firstBaseline" constant="3" id="2z3-kj-RcF"/>
@@ -72,7 +70,7 @@
                             <constraint firstItem="K7r-Vf-x0q" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="qhi-1z-u68"/>
                             <constraint firstItem="eyx-7P-FLz" firstAttribute="baseline" secondItem="Ynt-xp-cPa" secondAttribute="baseline" constant="3" id="v6k-5E-0bR"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <viewLayoutGuide key="safeArea" id="Wde-ZA-cfP"/>
                     </view>
                     <navigationItem key="navigationItem" title="📷" id="2UO-zu-Uhs">
                         <barButtonItem key="rightBarButtonItem" title="❤️" id="dOe-UC-Yj3" userLabel="Solemates">
@@ -82,10 +80,10 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="cameraRoll" destination="eyx-7P-FLz" id="Rfq-Ar-LFZ"/>
-                        <outlet property="captureButton" destination="Ynt-xp-cPa" id="XMa-0b-Crw"/>
-                        <outlet property="previewView" destination="Kp4-6A-fvw" id="CVN-Cc-sPH"/>
-                        <outlet property="selectedView" destination="K7r-Vf-x0q" id="1Jp-FJ-frQ"/>
+                        <outlet property="cameraRoll" destination="hba-fS-Lqk" id="hZu-wd-odS"/>
+                        <outlet property="captureButton" destination="IlH-Ig-dbC" id="eyv-5Y-Uwc"/>
+                        <outlet property="mlText" destination="D3t-RA-Bau" id="jRN-dI-e0Y"/>
+                        <outlet property="sceneView" destination="kYF-Qb-z8r" id="zwZ-XP-bHj"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -164,6 +162,21 @@
             </objects>
             <point key="canvasLocation" x="2267.5" y="-1544.5"/>
         </scene>
+        <!--View Controller-->
+        <scene sceneID="Sh1-bJ-ZkQ">
+            <objects>
+                <viewController id="wVq-ud-E4N" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Scr-Ub-LYp">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <viewLayoutGuide key="safeArea" id="y8F-UT-cei"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="cMq-hZ-foH" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3043" y="-1547"/>
+        </scene>
         <!--Navigation Controller-->
         <scene sceneID="AMn-OM-Ccb">
             <objects>
@@ -179,6 +192,20 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QqQ-T3-nvy" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="975" y="-1542"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="sF3-Hb-j1z">
+            <objects>
+                <viewController id="wEv-NY-aHM" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="x08-Ke-Yv6">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <viewLayoutGuide key="safeArea" id="Ecr-1a-kvh"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="NuG-zc-jHP" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
         </scene>
     </scenes>
     <color key="tintColor" cocoaTouchSystemColor="darkTextColor"/>

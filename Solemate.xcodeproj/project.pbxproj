@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		13A1A93A2049008000CAE084 /* Inceptionv3.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 13A1A9392049008000CAE084 /* Inceptionv3.mlmodel */; };
 		D97258DB203A398F000ACE77 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D97258DA203A398F000ACE77 /* AppDelegate.swift */; };
 		D97258DD203A398F000ACE77 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D97258DC203A398F000ACE77 /* ViewController.swift */; };
 		D97258E0203A398F000ACE77 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D97258DE203A398F000ACE77 /* Main.storyboard */; };
@@ -19,6 +20,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		13A1A9392049008000CAE084 /* Inceptionv3.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = Inceptionv3.mlmodel; sourceTree = "<group>"; };
 		D97258D7203A398F000ACE77 /* Solemate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Solemate.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D97258DA203A398F000ACE77 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D97258DC203A398F000ACE77 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -72,6 +74,7 @@
 				D97258E1203A398F000ACE77 /* Solemate.xcdatamodeld */,
 				D9C4772120478DE60064DAD8 /* shoe.swift */,
 				D9C4771F20478D000064DAD8 /* solematesViewController.swift */,
+				13A1A9392049008000CAE084 /* Inceptionv3.mlmodel */,
 			);
 			path = Solemate;
 			sourceTree = "<group>";
@@ -154,6 +157,7 @@
 				D97258DB203A398F000ACE77 /* AppDelegate.swift in Sources */,
 				D9C4772020478D000064DAD8 /* solematesViewController.swift in Sources */,
 				D97258E3203A398F000ACE77 /* Solemate.xcdatamodeld in Sources */,
+				13A1A93A2049008000CAE084 /* Inceptionv3.mlmodel in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -291,10 +295,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 554773PTD3;
+				DEVELOPMENT_TEAM = 5WJ59744U5;
 				INFOPLIST_FILE = Solemate/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.Uppalled.Solemate;
+				PRODUCT_BUNDLE_IDENTIFIER = billmoriarty.Solemate;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -306,10 +310,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 554773PTD3;
+				DEVELOPMENT_TEAM = 5WJ59744U5;
 				INFOPLIST_FILE = Solemate/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.Uppalled.Solemate;
+				PRODUCT_BUNDLE_IDENTIFIER = billmoriarty.Solemate;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
