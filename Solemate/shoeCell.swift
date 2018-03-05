@@ -8,15 +8,21 @@
 import UIKit
 import Foundation
 class shoeCell: UITableViewCell {
-    
+    ///Shoe image, table view
     @IBOutlet weak var shoeImage: UIImageView!
+    ///Shoe name, table view
     @IBOutlet weak var shoeName: UILabel!
+    ///Shoe description, table view
     @IBOutlet weak var shoeDescription: UILabel!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
-        shoeImage.layer.cornerRadius = shoeImage.frame.size.width / 2
-
+        //shoeImage layout
+        shoeImage.layer.cornerRadius = 35
+        shoeImage.layer.borderWidth = 1;
+        shoeImage.layer.borderColor = UIColor.lightGray.cgColor
+        shoeImage.layer.masksToBounds = true;
+    
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {

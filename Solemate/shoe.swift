@@ -12,14 +12,22 @@ import os.log
 
 class shoe: NSObject{
     //add extension for NSCoding
-    /*var  image: UIImage
+    ///Shoe stock image
+    var  image: UIImage
+    ///Shoe name
     var name:String
+    ///Shoe description
     var desc: String
+    ///Shoe price
     var price: Double
-    */
-    override init() {
-     //   image = UIImage()
+ 
+     init(image: UIImage, name: String, desc: String, price:Double) {
+        self.image = image
+        self.name =  name
+        self.desc = desc
+        self.price = price
     }
+    
     /*
      func encode(with aCoder: NSCoder) {
      <#code#>
