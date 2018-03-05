@@ -88,11 +88,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
      A forever loop to keep checking the on-phone ML model for what object is in the screen
     */
     func continuouslyUpdate() {
+         if self.selectedView.isHidden == true{
         //use new thread
         DispatchQueue.global().async {
             self.detect()
             self.continuouslyUpdate()
-        }
+            }
+        }// end if
     }
     
     func updateMLlabel(results: String) {
@@ -149,18 +151,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
             sceneView.isHidden = true;
         
             //Stop ML Model from running
+            // I was able to do this by adding this: "if self.selectedView.isHidden == true" in func continuouslyUpdate()
         
             //Send to server
         
-        
             //Trigger Pop Up
-        
         
     }
     
     //handling the selection from camera roll
-    func imagePickerController(_ picker: UIImagePickerController,
-                               didFinishPickingMediaWithInfo info: [String : Any]){
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]){
         //make sure an image was picked
         if let imagePicked = info[UIImagePickerControllerOriginalImage] as? UIImage {
         //set the selected image to be passed to server for recognition
