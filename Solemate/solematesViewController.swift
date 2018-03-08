@@ -45,7 +45,7 @@ class solematesViewController: UITableViewController{
                 shoeList.remove(at: indexPath.row)
                 
                 //Save the updated list
-               //saveShoes()
+                 saveShoes()
                 
                 //remove the shoe from the users view with animation
                 tableView.deleteRows(at: [indexPath], with: .fade)
@@ -57,7 +57,7 @@ class solematesViewController: UITableViewController{
             
             //Add the edit button to the navigation bar
             navigationItem.rightBarButtonItem = editButtonItem
-           /*
+           
             // Load any saved shoes, otherwise load sample shoes
             if let savedShoes = loadShoes() {
                 shoeList += savedShoes
@@ -65,8 +65,8 @@ class solematesViewController: UITableViewController{
             else {
                 // Load the sample shoes
                 loadSample()
-            }*/
-            loadSample()
+            }
+           // loadSample()
           
             
         }
@@ -133,18 +133,30 @@ class solematesViewController: UITableViewController{
         
         
         //MARK: Actions
-        /*
+    
+        /**
+        Saves the shoes currently in the shoeList
+        */
         private func saveShoes() {
+            
             let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(shoeList, toFile: shoe.ArchiveURL.path)
+            
             if isSuccessfulSave {
                 os_log("Shoes successfully saved.", log: OSLog.default, type: .debug)
             } else {
                 os_log("Failed to save shoes...", log: OSLog.default, type: .error)
             }
+            
         }
+    
+      /**
+      Loads the saved shoes from the archive
+      */
         private func loadShoes() -> [shoe]?  {
-            return NSKeyedUnarchiver.unarchiveObject(withFile: shoeList.ArchiveURL.path) as? [shoe]
-        }*/
+            
+            return NSKeyedUnarchiver.unarchiveObject(withFile: shoe.ArchiveURL.path) as? [shoe]
+            
+        }
 
 
     
