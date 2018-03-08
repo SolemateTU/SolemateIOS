@@ -73,11 +73,10 @@ class shoe: NSObject, NSCoding{
             return nil
         }
         
-        guard let price = aDecoder.decodeObject(forKey: PropertyKey.price) as? Double else {
+       guard let price = aDecoder.decodeDouble(forKey: PropertyKey.price) as? Double else {
             os_log("Unable to decode the price for a shoe object.", log: OSLog.default, type: .debug)
             return nil
         }
-        
         //initialize as shoe object with these variables
         self.init(image: image, name: name, desc: desc, price: price)
         
