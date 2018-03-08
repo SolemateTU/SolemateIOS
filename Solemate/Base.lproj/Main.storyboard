@@ -39,13 +39,14 @@
                                     <action selector="cameraTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="vLE-7Q-9SZ"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eyx-7P-FLz">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eyx-7P-FLz">
                                 <rect key="frame" x="16" y="575" width="68" height="68"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="68" id="RUd-hY-ksL"/>
                                     <constraint firstAttribute="width" secondItem="eyx-7P-FLz" secondAttribute="height" multiplier="1:1" id="y7f-kO-zg2"/>
                                 </constraints>
+                                <state key="normal" backgroundImage="iosCameraRoll"/>
                                 <connections>
                                     <action selector="photoLibraryTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="npt-Pp-SLO"/>
                                 </connections>
@@ -164,21 +165,6 @@
             </objects>
             <point key="canvasLocation" x="2266.4000000000001" y="-1544.9775112443779"/>
         </scene>
-        <!--View Controller-->
-        <scene sceneID="Sh1-bJ-ZkQ">
-            <objects>
-                <viewController id="wVq-ud-E4N" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="Scr-Ub-LYp">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <viewLayoutGuide key="safeArea" id="y8F-UT-cei"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="cMq-hZ-foH" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="3043" y="-1547"/>
-        </scene>
         <!--Navigation Controller-->
         <scene sceneID="AMn-OM-Ccb">
             <objects>
@@ -195,21 +181,9 @@
             </objects>
             <point key="canvasLocation" x="975" y="-1542"/>
         </scene>
-        <!--View Controller-->
-        <scene sceneID="sF3-Hb-j1z">
-            <objects>
-                <viewController id="wEv-NY-aHM" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="x08-Ke-Yv6">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <viewLayoutGuide key="safeArea" id="Ecr-1a-kvh"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="NuG-zc-jHP" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="10" y="-1548"/>
-        </scene>
     </scenes>
+    <resources>
+        <image name="iosCameraRoll" width="720" height="720"/>
+    </resources>
     <color key="tintColor" cocoaTouchSystemColor="darkTextColor"/>
 </document>
