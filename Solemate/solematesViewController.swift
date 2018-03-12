@@ -11,8 +11,10 @@ import UIKit
 import os.log
 
 class solematesViewController: UITableViewController{
+        ///List holding all the shoes
         public var shoeList = [shoe]()
-        var selected:shoe!
+    
+       var selected:shoe!
         override func numberOfSections(in tableView: UITableView) -> Int{
             return 1
         }
@@ -22,13 +24,16 @@ class solematesViewController: UITableViewController{
         }
         
         override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-            
+            ///Storyboard cell identifier
             let cellIdentifier = "shoeCell"
             
+            ///Local refrence to the reusable cell view
             let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? shoeCell
             
             let shoe = shoeList[indexPath.row]
-          
+            cell?.shoeImage.image = shoe.image
+            cell?.shoeName.text = shoe.name
+            cell?.shoeDescription.text = shoe.desc
 
             return cell!
         }
@@ -36,19 +41,23 @@ class solematesViewController: UITableViewController{
         // Override to edit the list of shoes
         override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
             if editingStyle == .delete {
-                // Delete the row from the data source
+                // Delete the row from the the shoe list
                 shoeList.remove(at: indexPath.row)
-              //  saveShoes()
+                
+                //Save the updated list
+                 saveShoes()
+                
+                //remove the shoe from the users view with animation
                 tableView.deleteRows(at: [indexPath], with: .fade)
             }
         }
         
         override func viewDidLoad() {
             super.viewDidLoad()
-            // Do any additional setup after loading the view.
             
-        //    navigationItem.leftBarButtonItem = editButtonItem
-           /*
+            //Add the edit button to the navigation bar
+            navigationItem.rightBarButtonItem = editButtonItem
+           
             // Load any saved shoes, otherwise load sample shoes
             if let savedShoes = loadShoes() {
                 shoeList += savedShoes
@@ -56,7 +65,8 @@ class solematesViewController: UITableViewController{
             else {
                 // Load the sample shoes
                 loadSample()
-            }*/
+            }
+           // loadSample()
           
             
         }
@@ -67,12 +77,20 @@ class solematesViewController: UITableViewController{
         }
         
         
-        //Sample shoes
+        /**
+        Sample shoes preloaded on application
+        */
         private func loadSample() {
-        /* let shoe1 =
-            let shoe2 =
-            let shoe3 =
-            shoeList += [shoe1,shoe2,shoe3]*/
+         let shoe1 = shoe(image: #imageLiteral(resourceName: "Powerphases"), name: "Yeezy Powerphase",
+                          desc: "The shoe is highlighted by its all-black leather upper, then featuring gold Calabasas branding alongside, in addition to adidas tagging in green and red. Tonal laces accompany to round out the design details.",
+                          price: 120)
+         let shoe2 = shoe(image: #imageLiteral(resourceName: "Powerphases"), name: "Yeezy Powerphase",
+                             desc: "The shoe is highlighted by its all-black leather upper, then featuring gold Calabasas branding alongside, in addition to adidas tagging in green and red. Tonal laces accompany to round out the design details.",
+                             price: 120)
+        let shoe3 = shoe(image: #imageLiteral(resourceName: "Powerphases"), name: "Yeezy Powerphase",
+                             desc: "The shoe is highlighted by its all-black leather upper, then featuring gold Calabasas branding alongside, in addition to adidas tagging in green and red. Tonal laces accompany to round out the design details.",
+                             price: 120)
+           shoeList += [shoe1,shoe2,shoe3]
             
         }
         
@@ -117,18 +135,30 @@ class solematesViewController: UITableViewController{
         
         
         //MARK: Actions
-        /*
+    
+        /**
+        Saves the shoes currently in the shoeList
+        */
         private func saveShoes() {
+            
             let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(shoeList, toFile: shoe.ArchiveURL.path)
+            
             if isSuccessfulSave {
                 os_log("Shoes successfully saved.", log: OSLog.default, type: .debug)
             } else {
                 os_log("Failed to save shoes...", log: OSLog.default, type: .error)
             }
+            
         }
+    
+      /**
+      Loads the saved shoes from the archive
+      */
         private func loadShoes() -> [shoe]?  {
-            return NSKeyedUnarchiver.unarchiveObject(withFile: shoeList.ArchiveURL.path) as? [shoe]
-        }*/
+            
+            return NSKeyedUnarchiver.unarchiveObject(withFile: shoe.ArchiveURL.path) as? [shoe]
+            
+        }
 
 
     
