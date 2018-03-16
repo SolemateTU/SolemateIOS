@@ -173,7 +173,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     
     //method to query on-phone ML model by taking the ARKit sceneview's current frame
     func detect(){
-        guard let model = try? VNCoreMLModel(for: Inceptionv3().model) else{
+        guard let model = try? VNCoreMLModel(for: Resnet50().model) else{
             fatalError("loading core ML model failed")
         }
         var firstResult = String ("")
