@@ -149,7 +149,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         let tempImage : CVPixelBuffer? = (sceneView.session.currentFrame?.capturedImage)
         if tempImage == nil { return }
         let tempciImage = CIImage(cvPixelBuffer: tempImage!)
-        print("CIImage parameters are ", tempciImage.properties)
 
         //initiate the request
         let request = VNCoreMLRequest(model: model) { (request, error) in }
