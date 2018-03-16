@@ -13,6 +13,7 @@ import SpriteKit
 import AVFoundation
 import CoreML
 import Vision
+import ModelIO
 
 class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
@@ -53,10 +54,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         cameraRoll.layer.shadowOffset = CGSize(width: 0, height: 2)
         cameraRoll.layer.shadowOpacity = 0.6
         cameraRoll.clipsToBounds = false
- 
-        // Tap Gesture Recognizer
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(gestureRecognize:)))
-        view.addGestureRecognizer(tapGesture)
+
         
         //temporary UI label to display recognized object
         mlText.frame = CGRect(x: 0, y: self.sceneView.frame.height-300, width: self.sceneView.frame.width, height: 66)
@@ -71,6 +69,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+
         let configuration = ARWorldTrackingConfiguration()
         sceneView.session.run(configuration)
         //continuously check the ML model
@@ -103,37 +102,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
             self.mlText.text = results
         }
     } // end updateMLlabel
-
-    /**
-     Handles when user taps on screen in AR
-     */
-    @objc func handleTap(gestureRecognize: UITapGestureRecognizer) {
-        // HIT TEST : REAL WORLD
-        // Get Screen Centre
-        let screenCentre : CGPoint = CGPoint(x: self.sceneView.bounds.midX, y: self.sceneView.bounds.midY)
-        
-        let arHitTestResults : [ARHitTestResult] = sceneView.hitTest(screenCentre, types: [.featurePoint])
-        
-        if let closestResult = arHitTestResults.first {
-            // Get Coordinates of HitTest
-            let transform : matrix_float4x4 = closestResult.worldTransform
-            let worldCoord : SCNVector3 = SCNVector3Make(transform.columns.3.x, transform.columns.3.y, transform.columns.3.z)
-            
-            //create an augmented reality text label it at that position
-            let labelNode = SCNText(string: self.currentRecognizedObject, extrusionDepth: CGFloat(0.01))
-            labelNode.firstMaterial?.diffuse.contents = UIColor.white
-            labelNode.font=UIFont(name: "Futura", size: 0.12)
-            labelNode.chamferRadius = CGFloat(0.01)
-            labelNode.alignmentMode = kCAAlignmentCenter
-
-            let labelNodeParent = SCNNode(geometry: labelNode)
-            labelNodeParent.scale = SCNVector3Make(0.2, 0.2, 0.2)
-            labelNodeParent.position = worldCoord
-            labelNodeParent.position.x = labelNodeParent.position.x/2
-            labelNodeParent.position.y = labelNodeParent.position.y/2
-            sceneView.scene.rootNode.addChildNode(labelNodeParent)
-        }
-    }
 
     /**
      Handles selected image
@@ -181,18 +149,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         let tempImage : CVPixelBuffer? = (sceneView.session.currentFrame?.capturedImage)
         if tempImage == nil { return }
         let tempciImage = CIImage(cvPixelBuffer: tempImage!)
+        print("CIImage parameters are ", tempciImage.properties)
 
         //initiate the request
-        let request = VNCoreMLRequest(model: model) { (request, error) in
-            //process the result of the request
-            guard let results = request.results as? [VNClassificationObservation] else {
-                fatalError("model failed to process image")
-            }
-            //format the result into a string
-            firstResult = results.first.flatMap({ $0 as VNClassificationObservation })
-                .map({ "\($0.identifier) \(String(format:"- %.2f", $0.confidence))" })!
-            print(firstResult )
-        }
+        let request = VNCoreMLRequest(model: model) { (request, error) in }
         //crop just the center of the captured camera frame to send to the ML model
         request.imageCropAndScaleOption=VNImageCropAndScaleOption.centerCrop
         
@@ -204,20 +164,42 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
             print(error)
         }
         
-        //update global currentRecognizedObject
-        self.currentRecognizedObject = firstResult
-        updateMLlabel(results: firstResult)
+        //process the result of the request
+        guard let results = request.results as? [VNClassificationObservation] else {
+            fatalError("model failed to process image")
+        }
+        //format the result into a string
+        firstResult = results.first.flatMap({ $0 as VNClassificationObservation })
+            .map({ "\($0.identifier) \(String(format:"- %.2f", $0.confidence))" })!
+        //check if firstResult is a type of shoe. Strings taken from resnet50 models
+        if (
+            firstResult.range(of: "sandal") != nil ||
+                firstResult.range(of: "Loafer") != nil  ||
+                firstResult.range(of: "running shoe") != nil ||
+                firstResult.range(of: "cowboy boot") != nil ||
+                firstResult.range(of: "clog, geta, patten, sabot") != nil
+            )
+            { print(firstResult )
+            //update global currentRecognizedObject
+            self.currentRecognizedObject = firstResult
+            updateMLlabel(results: firstResult)
+            //display AR node near the shoe to be queried
+            displayARShoe()
+            }
+        //reset the ui label to an empty string
+        else {updateMLlabel(results: "")}
+        
     } //end detect
 
     /**
      When capture button is tapped, it takes the picture and writes it to the camera roll
-     
      - Parameters:
         - sender: captureButton
      */
     @IBAction func cameraTapped(_ sender: UIButton) {
-      //  imagePicker.delegate = self
-      //  imagePicker.sourceType = sceneView.sc //easiest way of implementing camera functionality in any app
+        //erase the old shoe nodes so we only display one at a time
+        eraseARNodes(nodeNameToErase: "shoe_node", sceneView: self.sceneView)
+        
         selectedImage = sceneView.snapshot()
         UIImageWriteToSavedPhotosAlbum(selectedImage!, nil, nil, nil)
         //trigger the selected view
@@ -238,5 +220,66 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         
     }
     
+    //method to add AR shoe node near recognized shoe
+    func displayARShoe() -> Void {
+        
+        
+        //erase the old shoe nodes so we only display one at a time
+        eraseARNodes(nodeNameToErase: "shoe_node", sceneView: self.sceneView)
+        
+//        self.sceneView.scene.rootNode.enumerateChildNodes({ (node, _) in //this loops thru every node that's a child of the scene view's root node
+//            if node.name == "shoe_node" {
+//                //remove each node from their parent node (in this case the parent is the root)
+//                node.removeFromParentNode()
+//            }
+//        })
+        
+        //load the ar shoe model
+        let shoe_3d_scene = SCNScene(named: "art.scnassets/NikeAirmax_Lowpoly.scn")
+        let shoe_3d_node = shoe_3d_scene?.rootNode.childNode(withName: "shoe_3d", recursively: false)
+        
+        guard let pointOfView = sceneView.pointOfView else {return} // sceneView.pointOfView is a Matrix of data
+        let transform = pointOfView.transform
+        //current location of the phone
+        let orientation = SCNVector3(
+            -transform.m31,
+            -transform.m32,
+            -transform.m33
+        ) //m31 is 3rd column, 1st row
+        //current location of the Camera
+        let location = SCNVector3(
+            transform.m41,
+            transform.m42,
+            transform.m43
+        )
+        //sum the positions
+        let currentPositionOfCamera = sumSCNPositions(left: orientation, right: location)
+
+        //shoe_3d_node = SCNNode(geometry:  SCNSphere(radius: 0.1))
+        shoe_3d_node?.name = "shoe_node"
+        //shoeNode.geometry?.firstMaterial?.diffuse.contents = UIColor.red
+        shoe_3d_node?.position = currentPositionOfCamera
+        self.sceneView.scene.rootNode.addChildNode(shoe_3d_node!)
+        let rotateshoeNode = SCNAction.rotateBy(x: 0, y: CGFloat(360.degreesToRadians), z: 0, duration: 4)
+        let forevershoeNode = SCNAction.repeatForever(rotateshoeNode)
+        shoe_3d_node?.runAction(forevershoeNode)
+    }
     
     }//end class ViewController
+
+extension Int {
+    var degreesToRadians: Double { return Double(self) * .pi/180}
+}
+func sumSCNPositions(left: SCNVector3, right: SCNVector3) -> SCNVector3 {
+    return SCNVector3Make(left.x + right.x, left.y + right.y, left.z + right.z)
+}
+
+func eraseARNodes(nodeNameToErase: String, sceneView: ARSCNView){
+    //erase the old shoe nodes so we only display one at a time
+    sceneView.scene.rootNode.enumerateChildNodes({ (node, _) in //this loops thru every node that's a child of the scene view's root node
+        if node.name == nodeNameToErase {
+            //remove each node from their parent node (in this case the parent is the root)
+            node.removeFromParentNode()
+        }
+    })
+}
