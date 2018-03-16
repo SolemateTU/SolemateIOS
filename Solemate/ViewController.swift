@@ -85,12 +85,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     }
     
     /**
-     A forever loop to keep checking the on-phone ML model for what object is in the screen
+     A forever loop to keep checking the on-phone ML model for what object is in the screen. Runs 2 times per second
     */
     func continuouslyUpdate() {
          if self.selectedView.isHidden == true{
         //use new thread
-        DispatchQueue.global().async {
+        DispatchQueue.global().asyncAfter(deadline: .now() + 0.5) {
             self.detect()
             self.continuouslyUpdate()
             }
