@@ -51,12 +51,6 @@
                                     <action selector="photoLibraryTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="npt-Pp-SLO"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ILg-IO-zcj">
-                                <rect key="frame" x="166" y="111" width="42" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -66,10 +60,8 @@
                             <constraint firstItem="kYF-Qb-z8r" firstAttribute="top" secondItem="Wde-ZA-cfP" secondAttribute="top" id="6uK-pJ-t3Z"/>
                             <constraint firstItem="kYF-Qb-z8r" firstAttribute="leading" secondItem="K7r-Vf-x0q" secondAttribute="leading" id="DjB-hQ-qRf"/>
                             <constraint firstItem="kYF-Qb-z8r" firstAttribute="centerX" secondItem="Ynt-xp-cPa" secondAttribute="centerX" id="EDt-jR-wgh"/>
-                            <constraint firstItem="kYF-Qb-z8r" firstAttribute="centerX" secondItem="ILg-IO-zcj" secondAttribute="centerX" id="FtO-uu-AIN"/>
                             <constraint firstItem="K7r-Vf-x0q" firstAttribute="top" secondItem="kYF-Qb-z8r" secondAttribute="top" constant="-64" id="IZc-q1-TNN"/>
                             <constraint firstItem="kYF-Qb-z8r" firstAttribute="trailing" secondItem="K7r-Vf-x0q" secondAttribute="trailing" id="ORh-f5-dNT"/>
-                            <constraint firstItem="ILg-IO-zcj" firstAttribute="top" secondItem="Wde-ZA-cfP" secondAttribute="top" constant="47" id="Pb0-ik-9Sp"/>
                             <constraint firstItem="kYF-Qb-z8r" firstAttribute="bottom" secondItem="K7r-Vf-x0q" secondAttribute="bottom" id="XoD-Xu-kr8"/>
                             <constraint firstItem="kYF-Qb-z8r" firstAttribute="bottom" secondItem="t06-IE-3jY" secondAttribute="bottom" id="YIz-Z1-WZQ"/>
                             <constraint firstItem="eyx-7P-FLz" firstAttribute="top" secondItem="Ynt-xp-cPa" secondAttribute="top" constant="3" id="bo0-Vp-P6y"/>
@@ -89,7 +81,6 @@
                     <connections>
                         <outlet property="cameraRoll" destination="eyx-7P-FLz" id="MvP-BL-ygv"/>
                         <outlet property="captureButton" destination="Ynt-xp-cPa" id="Csa-Ge-gTh"/>
-                        <outlet property="mlText" destination="ILg-IO-zcj" id="CH8-b8-0DF"/>
                         <outlet property="sceneView" destination="kYF-Qb-z8r" id="zwZ-XP-bHj"/>
                         <outlet property="selectedView" destination="K7r-Vf-x0q" id="lQc-xL-HuD"/>
                     </connections>

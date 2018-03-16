@@ -14,16 +14,15 @@ import AVFoundation
 import CoreML
 import Vision
 import ModelIO
+import MessageUI
 
 class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    
     
     @IBOutlet weak var captureButton: UIButton!
     @IBOutlet weak var cameraRoll: UIButton!
     ///Augmented reality view provides live camera feed
     @IBOutlet var sceneView: ARSCNView!
-    ///Temporary UI label to show results of on-device ML model
-    @IBOutlet var mlText: UILabel!
+
     ///View controller to select an image from camera roll
     var imagePicker = UIImagePickerController()
     ///Holds the selected image to be sent to server
@@ -55,12 +54,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         cameraRoll.layer.shadowOpacity = 0.6
         cameraRoll.clipsToBounds = false
 
-        
-        //temporary UI label to display recognized object
-        mlText.frame = CGRect(x: 0, y: self.sceneView.frame.height-300, width: self.sceneView.frame.width, height: 66)
-        mlText.textAlignment = .center
         }
-    
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -83,9 +77,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         super.viewWillDisappear(animated)
     }
     
-    /**
-     A forever loop to keep checking the on-phone ML model for what object is in the screen. Runs 2 times per second
-    */
+    /* A forever loop to keep checking the on-phone ML model for what object is in the screen. Runs 2 times per second */
     func continuouslyUpdate() {
          if self.selectedView.isHidden == true{
         //use new thread
@@ -95,13 +87,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
             }
         }// end if
     }
-    
-    func updateMLlabel(results: String) {
-        //use main thread - required
-        DispatchQueue.main.sync {
-            self.mlText.text = results
-        }
-    } // end updateMLlabel
 
     /**
      Handles selected image
@@ -121,7 +106,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
             //Stop ML Model from running
             // I was able to do this by adding this: "if self.selectedView.isHidden == true" in func continuouslyUpdate()
         
-            //Send to server
+            //Send to AWS server
+            sendImageToAWS(imageToSend: selectedImage!)
         
             //Trigger Pop Up
         
@@ -181,12 +167,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
             { print(firstResult )
             //update global currentRecognizedObject
             self.currentRecognizedObject = firstResult
-            updateMLlabel(results: firstResult)
             //display AR node near the shoe to be queried
             displayARShoe()
             }
-        //reset the ui label to an empty string
-        else {updateMLlabel(results: "")}
         
     } //end detect
 
@@ -196,7 +179,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         - sender: captureButton
      */
     @IBAction func cameraTapped(_ sender: UIButton) {
-        //erase the old shoe nodes so we only display one at a time
+        //erase the ar shoe node so it's not save in snapshot
         eraseARNodes(nodeNameToErase: "shoe_node", sceneView: self.sceneView)
         
         selectedImage = sceneView.snapshot()
@@ -207,7 +190,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     
     /**
      When photo library button is tapped, This view controller is presented to the user
-     
      - Parameters:
         - sender: cameraRoll button
      */
@@ -216,23 +198,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         imagePicker.sourceType = .photoLibrary //easiest way of implementing photo library functionality in any app
         imagePicker.allowsEditing = false
         present (imagePicker, animated: true, completion: nil)
-        
     }
     
     //method to add AR shoe node near recognized shoe
     func displayARShoe() -> Void {
-        
-        
         //erase the old shoe nodes so we only display one at a time
         eraseARNodes(nodeNameToErase: "shoe_node", sceneView: self.sceneView)
-        
-//        self.sceneView.scene.rootNode.enumerateChildNodes({ (node, _) in //this loops thru every node that's a child of the scene view's root node
-//            if node.name == "shoe_node" {
-//                //remove each node from their parent node (in this case the parent is the root)
-//                node.removeFromParentNode()
-//            }
-//        })
-        
         //load the ar shoe model
         let shoe_3d_scene = SCNScene(named: "art.scnassets/NikeAirmax_Lowpoly.scn")
         let shoe_3d_node = shoe_3d_scene?.rootNode.childNode(withName: "shoe_3d", recursively: false)
@@ -253,10 +224,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         )
         //sum the positions
         let currentPositionOfCamera = sumSCNPositions(left: orientation, right: location)
-
-        //shoe_3d_node = SCNNode(geometry:  SCNSphere(radius: 0.1))
         shoe_3d_node?.name = "shoe_node"
-        //shoeNode.geometry?.firstMaterial?.diffuse.contents = UIColor.red
         shoe_3d_node?.position = currentPositionOfCamera
         self.sceneView.scene.rootNode.addChildNode(shoe_3d_node!)
         let rotateshoeNode = SCNAction.rotateBy(x: 0, y: CGFloat(360.degreesToRadians), z: 0, duration: 4)
@@ -264,7 +232,52 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         shoe_3d_node?.runAction(forevershoeNode)
     }
     
-    }//end class ViewController
+    
+    func sendImageToAWS(imageToSend: UIImage){
+        // Set up the URL request
+        let AWS_get_endpoint: String = "https://veu0d6ijb3.execute-api.us-east-1.amazonaws.com/prod"
+        guard let url = URL(string: AWS_get_endpoint) else {
+            print("Error: cannot create URL")
+            return
+        }
+        let urlRequest = URLRequest(url: url)
+        
+        // set up the session
+        let config = URLSessionConfiguration.default
+        let session = URLSession(configuration: config)
+        
+        // make the request
+        let task = session.dataTask(with: urlRequest) {
+            (data, response, error) in
+            // check for any errors
+            guard error == nil else {
+                print("error calling endpoint")
+                print(error!)
+                return
+            }
+            // make sure we got data
+            guard let responseData = data else {
+                print("Error: did not receive data")
+                return
+            }
+            // parse the result as JSON, since that's what the API provides
+            do {
+                guard let AWS_received_data = try JSONSerialization.jsonObject(with: responseData, options: [])
+                    as? [String: Any] else {
+                        print("did not receive data from AWS")
+                        return
+                }
+                // let's just print it to prove we can access it
+                print("The data from AWS is: " + AWS_received_data.description)
+            } catch  {
+                print("error trying to convert data to JSON")
+                return
+            }
+        }
+        task.resume()
+    }
+    
+}//end class ViewController
 
 extension Int {
     var degreesToRadians: Double { return Double(self) * .pi/180}
@@ -282,3 +295,7 @@ func eraseARNodes(nodeNameToErase: String, sceneView: ARSCNView){
         }
     })
 }
+
+
+
+
