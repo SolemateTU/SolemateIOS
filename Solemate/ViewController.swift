@@ -23,6 +23,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     ///Augmented reality view provides live camera feed
     @IBOutlet var sceneView: ARSCNView!
 
+    ///Pop Up view
+    @IBOutlet weak var popUpView: UIView!
+    
+    
     ///View controller to select an image from camera roll
     var imagePicker = UIImagePickerController()
     ///Holds the selected image to be sent to server
@@ -107,9 +111,26 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
             // I was able to do this by adding this: "if self.selectedView.isHidden == true" in func continuouslyUpdate()
         
             //Send to AWS server
-            sendImageToAWS(imageToSend: selectedImage!)
+            //sendImageToAWS(imageToSend: selectedImage!)
         
             //Trigger Pop Up
+            UIView.animate(withDuration: 0.5, delay: 0.1, options:
+                UIViewAnimationOptions.curveEaseOut, animations: {
+                self.popUpView.alpha = 0
+                self.popUpView.isHidden = false
+                self.popUpView.alpha = 0.5
+                self.popUpView.alpha = 1
+                }, completion: nil
+                )
+
+    }
+    
+    /**
+     Handles pop up view content
+     - loads response from aws into pop up view
+     */
+    func popUpViewContentHandler(shoe: shoe) {
+        
         
     }
     
