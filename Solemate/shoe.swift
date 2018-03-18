@@ -73,7 +73,7 @@ class shoe: NSObject, NSCoding{
             return nil
         }
         
-       guard let price = aDecoder.decodeDouble(forKey: PropertyKey.price) as? Double else {
+       guard let price = aDecoder.decodeDouble(forKey: PropertyKey.price) as Optional else {
             os_log("Unable to decode the price for a shoe object.", log: OSLog.default, type: .debug)
             return nil
         }

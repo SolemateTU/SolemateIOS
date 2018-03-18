@@ -234,6 +234,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     
     
     func sendImageToAWS(imageToSend: UIImage){
+
         // Set up the URL request
         let AWS_get_endpoint: String = "https://veu0d6ijb3.execute-api.us-east-1.amazonaws.com/prod"
         guard let url = URL(string: AWS_get_endpoint) else {
