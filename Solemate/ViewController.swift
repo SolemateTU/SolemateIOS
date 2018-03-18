@@ -34,6 +34,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     //Pop Up view components
     ///Pop Up View
     @IBOutlet weak var popUpView: UIView!
+    ///top of popup view created by the constraints
+    var topOfPopUp: CGFloat!
     ///Name of recognized shoe, returned from AWS
     @IBOutlet weak var recognizedName: UILabel!
      ///Image of recognized shoe, returned from AWS
@@ -69,6 +71,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         popUpView.layer.shadowOffset = CGSize(width: 0, height: 0)
         popUpView.layer.shadowOpacity = 0.8
         popUpView.clipsToBounds = false
+        topOfPopUp = popUpView.frame.origin.y
         }
 
     override func didReceiveMemoryWarning() {
@@ -124,12 +127,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
             //Send to AWS server
             sendImageToAWS(imageToSend: selectedImage!)
             //Trigger Pop Up
-            UIView.animate(withDuration: 0.5, delay: 0.1, options:
+            popUpView.frame.origin.y = view.frame.origin.y + view.frame.size.height
+            popUpView.isHidden = false
+            UIView.animate(withDuration: 0.4, delay: 0.1, options:
                 UIViewAnimationOptions.curveEaseOut, animations: {
-                self.popUpView.alpha = 0
-                self.popUpView.isHidden = false
-                self.popUpView.alpha = 0.5
-                self.popUpView.alpha = 1
+                    self.popUpView.frame.origin.y = self.topOfPopUp
                 }, completion: nil
                 )
 
@@ -198,6 +200,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
             { print(firstResult )
             //update global currentRecognizedObject
             self.currentRecognizedObject = firstResult
+            // get the image of the shoe before running AR
+            selectedImage = sceneView.snapshot()
             //display AR node near the shoe to be queried
             displayARShoe()
             }
@@ -238,8 +242,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         //removes the selected image
         selectedView.isHidden = true
         
-        //hides pop up
+        //animate pop up view dismissal
+        UIView.animate(withDuration: 0.4, delay: 0.1, options:
+            UIViewAnimationOptions.curveEaseOut, animations: {
+                self.popUpView.frame.origin.y = self.topOfPopUp + 15
+        }, completion: nil
+        )
         popUpView.isHidden = true
+        
         //resumes the sceneview
         sceneView.isHidden = false
         sceneView.play(Any?.self)
@@ -277,8 +287,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         self.sceneView.scene.rootNode.addChildNode(shoe_3d_node!)
         let rotateshoeNode = SCNAction.rotateBy(x: 0, y: CGFloat(360.degreesToRadians), z: 0, duration: 2)
         let forevershoeNode = SCNAction.repeat(rotateshoeNode, count:1)
-       // get the image of the shoe before running AR
-        selectedImage = sceneView.snapshot()
         //run AR
         shoe_3d_node?.runAction(forevershoeNode)
         //make sure the AR has run then selected handler
