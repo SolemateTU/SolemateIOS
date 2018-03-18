@@ -244,6 +244,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         //resumes the sceneview
         sceneView.isHidden = false
         sceneView.play(Any?.self)
+        self.continuouslyUpdate()
     }
     
     
