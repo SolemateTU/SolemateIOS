@@ -123,7 +123,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         
             //Send to AWS server
             sendImageToAWS(imageToSend: selectedImage!)
-        
             //Trigger Pop Up
             UIView.animate(withDuration: 0.5, delay: 0.1, options:
                 UIViewAnimationOptions.curveEaseOut, animations: {
@@ -276,9 +275,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         shoe_3d_node?.name = "shoe_node"
         shoe_3d_node?.position = currentPositionOfCamera
         self.sceneView.scene.rootNode.addChildNode(shoe_3d_node!)
-        let rotateshoeNode = SCNAction.rotateBy(x: 0, y: CGFloat(360.degreesToRadians), z: 0, duration: 4)
-        let forevershoeNode = SCNAction.repeatForever(rotateshoeNode)
+        let rotateshoeNode = SCNAction.rotateBy(x: 0, y: CGFloat(360.degreesToRadians), z: 0, duration: 2)
+        let forevershoeNode = SCNAction.repeat(rotateshoeNode, count:1)
+       // get the image of the shoe before running AR
+        selectedImage = sceneView.snapshot()
+        //run AR
         shoe_3d_node?.runAction(forevershoeNode)
+        //make sure the AR has run then selected handler
+        sleep(2)
+        DispatchQueue.main.async {
+            self.selectedImageHandler()
+        }
     }
     
     
