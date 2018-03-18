@@ -62,6 +62,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         cameraRoll.layer.shadowOpacity = 0.6
         cameraRoll.clipsToBounds = false
 
+        //pop up layout
+        popUpView.layer.cornerRadius = 15
+        popUpView.layer.shadowRadius = 3
+        popUpView.layer.shadowColor = UIColor.black.cgColor
+        popUpView.layer.shadowOffset = CGSize(width: 0, height: 0)
+        popUpView.layer.shadowOpacity = 0.8
+        popUpView.clipsToBounds = false
         }
 
     override func didReceiveMemoryWarning() {
