@@ -17,12 +17,12 @@ import ModelIO
 import MessageUI
 
 class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    
+    //Main view components
     @IBOutlet weak var captureButton: UIButton!
     @IBOutlet weak var cameraRoll: UIButton!
     ///Augmented reality view provides live camera feed
     @IBOutlet var sceneView: ARSCNView!
-
+    
     ///View controller to select an image from camera roll
     var imagePicker = UIImagePickerController()
     ///Holds the selected image to be sent to server
@@ -31,6 +31,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     @IBOutlet weak var selectedView: UIImageView!
     var currentRecognizedObject: String = ""
 
+    //Pop Up view components
+    ///Pop Up View
+    @IBOutlet weak var popUpView: UIView!
+    ///Name of recognized shoe, returned from AWS
+    @IBOutlet weak var recognizedName: UILabel!
+     ///Image of recognized shoe, returned from AWS
+    @IBOutlet weak var recognizedImage: UIImageView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Create a new scene
@@ -54,6 +62,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         cameraRoll.layer.shadowOpacity = 0.6
         cameraRoll.clipsToBounds = false
 
+        //pop up layout
+        popUpView.layer.cornerRadius = 15
+        popUpView.layer.shadowRadius = 3
+        popUpView.layer.shadowColor = UIColor.black.cgColor
+        popUpView.layer.shadowOffset = CGSize(width: 0, height: 0)
+        popUpView.layer.shadowOpacity = 0.8
+        popUpView.clipsToBounds = false
         }
 
     override func didReceiveMemoryWarning() {
@@ -96,12 +111,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
      */
     func selectedImageHandler(){
             //shows the selected image
-            selectedView.isHidden = false;
+            selectedView.isHidden = false
             selectedView.image = selectedImage
         
             //pauses the sceneview and hides it
             sceneView.pause(Any?.self)
-            sceneView.isHidden = true;
+            sceneView.isHidden = true
         
             //Stop ML Model from running
             // I was able to do this by adding this: "if self.selectedView.isHidden == true" in func continuouslyUpdate()
@@ -110,6 +125,23 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
             sendImageToAWS(imageToSend: selectedImage!)
         
             //Trigger Pop Up
+            UIView.animate(withDuration: 0.5, delay: 0.1, options:
+                UIViewAnimationOptions.curveEaseOut, animations: {
+                self.popUpView.alpha = 0
+                self.popUpView.isHidden = false
+                self.popUpView.alpha = 0.5
+                self.popUpView.alpha = 1
+                }, completion: nil
+                )
+
+    }
+    
+    /**
+     Handles pop up view content
+     - loads response from aws into pop up view
+     */
+    func popUpViewContentHandler(shoe: shoe) {
+        
         
     }
     
@@ -200,6 +232,23 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         present (imagePicker, animated: true, completion: nil)
     }
     
+    /**
+     When a user closes the pop up reset camera feed
+     */
+    @IBAction func closePopUp(_ sender: UIButton) {
+        //removes the selected image
+        selectedView.isHidden = true
+        
+        //hides pop up
+        popUpView.isHidden = true
+        //resumes the sceneview
+        sceneView.isHidden = false
+        sceneView.play(Any?.self)
+        self.continuouslyUpdate()
+    }
+    
+    
+    
     //method to add AR shoe node near recognized shoe
     func displayARShoe() -> Void {
         //erase the old shoe nodes so we only display one at a time
@@ -270,6 +319,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
                 }
                 // let's just print it to prove we can access it
                 print("The data from AWS is: " + AWS_received_data.description)
+                self.recognizedName.text  = AWS_received_data.description
+               //send data within shoe object to popup content handler to display
+               // let  shoe = shoe(image: , name: "",
+               //                       desc: "",
+               //                       price: )
+              //popUpViewContentHandler(shoe: shoe)
             } catch  {
                 print("error trying to convert data to JSON")
                 return
