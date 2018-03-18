@@ -57,7 +57,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         captureButton.clipsToBounds = false
         
         //camera roll button layout
-        cameraRoll.layer.cornerRadius = 15
+        cameraRoll.layer.cornerRadius = 17
         cameraRoll.layer.shadowRadius = 3
         cameraRoll.layer.shadowColor = UIColor.black.cgColor
         cameraRoll.layer.shadowOffset = CGSize(width: 0, height: 2)
@@ -65,12 +65,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         cameraRoll.clipsToBounds = false
 
         //pop up layout
-        popUpView.layer.cornerRadius = 15
+        popUpView.layer.cornerRadius = 17
+        //only add corner radius to top corners
+        popUpView.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
         popUpView.layer.shadowRadius = 3
         popUpView.layer.shadowColor = UIColor.black.cgColor
         popUpView.layer.shadowOffset = CGSize(width: 0, height: 0)
         popUpView.layer.shadowOpacity = 0.8
-        popUpView.clipsToBounds = false
         topOfPopUp = popUpView.frame.origin.y
         }
 
@@ -126,8 +127,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         
             //Send to AWS server
             sendImageToAWS(imageToSend: selectedImage!)
+        
             //Trigger Pop Up
-            popUpView.frame.origin.y = view.frame.origin.y + view.frame.size.height
+            popUpView.frame.origin.y = topOfPopUp + 250
             popUpView.isHidden = false
             UIView.animate(withDuration: 0.4, delay: 0.1, options:
                 UIViewAnimationOptions.curveEaseOut, animations: {
@@ -142,8 +144,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
      - loads response from aws into pop up view
      */
     func popUpViewContentHandler(shoe: shoe) {
-        
-        
+        //image
+        recognizedImage.image = shoe.image
+        recognizedImage.layer.cornerRadius = 70
+        recognizedImage.layer.borderWidth = 1;
+        recognizedImage.layer.borderColor = UIColor.lightGray.cgColor
+        recognizedImage.layer.masksToBounds = true;
+        //name
+        recognizedName.text = shoe.name
     }
     
     //handling the selection from camera roll
@@ -242,12 +250,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         //removes the selected image
         selectedView.isHidden = true
         
-        //animate pop up view dismissal
-        UIView.animate(withDuration: 0.4, delay: 0.1, options:
-            UIViewAnimationOptions.curveEaseOut, animations: {
-                self.popUpView.frame.origin.y = self.topOfPopUp + 15
-        }, completion: nil
-        )
+        //hide pop up view
         popUpView.isHidden = true
         
         //resumes the sceneview
@@ -298,6 +301,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     
     
     func sendImageToAWS(imageToSend: UIImage){
+            //temporarily calling pop up handler here but delete when we get success call back
+        let shoe1 = shoe(image: #imageLiteral(resourceName: "Powerphases"), name: "Yeezy Powerphase",
+                         desc: "The shoe is highlighted by its all-black leather upper, then featuring gold Calabasas branding alongside, in addition to adidas tagging in green and red. Tonal laces accompany to round out the design details.",
+                         price: 120)
+        self.popUpViewContentHandler(shoe: shoe1)
         // Set up the URL request
         let AWS_get_endpoint: String = "https://veu0d6ijb3.execute-api.us-east-1.amazonaws.com/prod"
         guard let url = URL(string: AWS_get_endpoint) else {
@@ -333,12 +341,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
                 }
                 // let's just print it to prove we can access it
                 print("The data from AWS is: " + AWS_received_data.description)
-                self.recognizedName.text  = AWS_received_data.description
                //send data within shoe object to popup content handler to display
-               // let  shoe = shoe(image: , name: "",
-               //                       desc: "",
-               //                       price: )
-              //popUpViewContentHandler(shoe: shoe)
+                let shoe1 = shoe(image: #imageLiteral(resourceName: "Powerphases"), name: "Yeezy Powerphase",
+                                 desc: "The shoe is highlighted by its all-black leather upper, then featuring gold Calabasas branding alongside, in addition to adidas tagging in green and red. Tonal laces accompany to round out the design details.",
+                                 price: 120)
+                self.popUpViewContentHandler(shoe: shoe1)
             } catch  {
                 print("error trying to convert data to JSON")
                 return
