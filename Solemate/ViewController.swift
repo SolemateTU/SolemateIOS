@@ -73,6 +73,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         popUpView.layer.shadowOffset = CGSize(width: 0, height: 0)
         popUpView.layer.shadowOpacity = 0.8
         topOfPopUp = popUpView.frame.origin.y
+        //pop up image layout
+        recognizedImage.layer.cornerRadius = 70
+        recognizedImage.layer.borderWidth = 1;
+        recognizedImage.layer.borderColor = UIColor.lightGray.cgColor
+        recognizedImage.layer.masksToBounds = true;
         }
 
     override func didReceiveMemoryWarning() {
@@ -146,10 +151,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     func popUpViewContentHandler(shoe: shoe) {
         //image
         recognizedImage.image = shoe.image
-        recognizedImage.layer.cornerRadius = 70
-        recognizedImage.layer.borderWidth = 1;
-        recognizedImage.layer.borderColor = UIColor.lightGray.cgColor
-        recognizedImage.layer.masksToBounds = true;
+
         //name
         recognizedName.text = shoe.name
     }
@@ -294,6 +296,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         shoe_3d_node?.runAction(forevershoeNode)
         //make sure the AR has run then selected handler
         sleep(2)
+        //remove shoe_3d_node
+      //  self.sceneView.scene.rootNode.removeFromParentNode()
         DispatchQueue.main.async {
             self.selectedImageHandler()
         }
