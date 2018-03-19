@@ -296,11 +296,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         shoe_3d_node?.runAction(forevershoeNode)
         //make sure the AR has run then selected handler
         sleep(2)
-        //remove shoe_3d_node
-        shoe_3d_node?.removeFromParentNode()
         DispatchQueue.main.async {
             self.selectedImageHandler()
         }
+        //remove shoe from view after done running
+        shoe_3d_node?.removeFromParentNode()
+        
     }
     
     
