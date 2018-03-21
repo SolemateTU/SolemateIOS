@@ -57,8 +57,9 @@ class shoeDetailsViewController: UIViewController{
         shoeName.text = shoe.name
         //description
         shoeDescription.text = shoe.desc
+        shoeDescription.sizeToFit()
         //price
-        shoePrice.text = String(shoe.price)
+        shoePrice.text = "$\(Int(shoe.price))"
     }
     
 }
