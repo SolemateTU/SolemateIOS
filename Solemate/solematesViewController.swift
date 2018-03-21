@@ -13,8 +13,7 @@ import os.log
 class solematesViewController: UITableViewController{
         ///List holding all the shoes
         public var shoeList = [shoe]()
-    
-       var selected:shoe!
+     //  var selected:shoe!
         override func numberOfSections(in tableView: UITableView) -> Int{
             return 1
         }
@@ -94,28 +93,28 @@ class solematesViewController: UITableViewController{
             
         }
         
-      /*  override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
             
             super.prepare(for: segue, sender: sender)
             
-            // Configure the destination view controller only when the save button is pressed.
+            // Configure the destination view controller when
             if let selectedShoe = sender as? shoeCell{
                 
                 
-                guard let viewViewController = segue.destination as? ViewController else {
+                guard let detailsViewController = segue.destination as? shoeDetailsViewController else {
                     fatalError("Unexpected destination: \(segue.destination)")
                 }
                 
-                guard let indexPath = tableView.indexPath(for: selectedPin) else {
+                guard let indexPath = tableView.indexPath(for: selectedShoe) else {
                     fatalError("The selected cell is not being displayed by the table")
                 }
                 
                 let selected = shoeList[indexPath.row]
-                solematesViewController.shoe = selected
+                detailsViewController.shoe = selected
                 print(selected)
             }
             
-        }*/
+        }
         
         //MARK: Navigation
    /* Use this to add recently recognized shoes from the viewController scene
