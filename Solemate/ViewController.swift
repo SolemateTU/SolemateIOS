@@ -352,7 +352,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
                  DispatchQueue.main.async {
                 self.recognizedName.text = convertedString!
                 }
-              //  self.popUpViewContentHandler(shoe: shoe1)
             } catch  {
                 print("error trying to convert data to JSON")
                 return
