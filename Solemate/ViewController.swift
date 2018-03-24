@@ -91,7 +91,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         let configuration = ARWorldTrackingConfiguration()
         sceneView.session.run(configuration)
         //continuously check the ML model
-        continuouslyUpdate()
+        //continuouslyUpdate()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -258,7 +258,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         //resumes the sceneview
         sceneView.isHidden = false
         sceneView.play(Any?.self)
-        self.continuouslyUpdate()
+      //  self.continuouslyUpdate()
     }
     
     
@@ -312,7 +312,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
                          price: 120)
         self.popUpViewContentHandler(shoe: shoe1)
         // Set up the URL request
-        let AWS_get_endpoint: String = "https://veu0d6ijb3.execute-api.us-east-1.amazonaws.com/prod"
+        let AWS_get_endpoint: String = "https://3wpql46dsk.execute-api.us-east-1.amazonaws.com/prod/Recommend_Function/"
         guard let url = URL(string: AWS_get_endpoint) else {
             print("Error: cannot create URL")
             return
