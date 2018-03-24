@@ -307,7 +307,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     
     func sendImageToAWS(imageToSend: UIImage){
             //temporarily calling pop up handler here but delete when we get success call back
-        let shoe1 = shoe(image: #imageLiteral(resourceName: "Powerphases"), name: "Solemate Received Request",
+        let shoe1 = shoe(image: #imageLiteral(resourceName: "Powerphases"), name: "Yeezy PowerPhase",
                          desc: "The shoe is highlighted by its all-black leather upper, then featuring gold Calabasas branding alongside, in addition to adidas tagging in green and red. Tonal laces accompany to round out the design details.",
                          price: 120)
         self.popUpViewContentHandler(shoe: shoe1)
@@ -339,18 +339,20 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
             }
             // parse the result as JSON, since that's what the API provides
             do {
-                guard let AWS_received_data = try JSONSerialization.jsonObject(with: responseData, options: [])
-                    as? [String: Any] else {
-                        print("did not receive data from AWS")
-                        return
-                }
+          //      guard let AWS_received_data = try JSONSerialization.jsonObject(with: responseData, options: [])
+           //         as? [String: Any] else {
+            //            print("did not receive data from AWS")
+               //         return
+               // }
+                
+                let convertedString = String(data: responseData, encoding: String.Encoding.utf8)
                 // let's just print it to prove we can access it
-                print("The data from AWS is: " + AWS_received_data.description)
-               //send data within shoe object to popup content handler to display
-                let shoe1 = shoe(image: #imageLiteral(resourceName: "Powerphases"), name: "Yeezy Powerphase",
-                                 desc: "The shoe is highlighted by its all-black leather upper, then featuring gold Calabasas branding alongside, in addition to adidas tagging in green and red. Tonal laces accompany to round out the design details.",
-                                 price: 120)
-                self.popUpViewContentHandler(shoe: shoe1)
+                print("The data from AWS is: " + convertedString!)
+                //update name of shoe to show returned string
+                 DispatchQueue.main.async {
+                self.recognizedName.text = convertedString!
+                }
+              //  self.popUpViewContentHandler(shoe: shoe1)
             } catch  {
                 print("error trying to convert data to JSON")
                 return
