@@ -307,7 +307,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     
     func sendImageToAWS(imageToSend: UIImage){
             //temporarily calling pop up handler here but delete when we get success call back
-        let shoe1 = shoe(image: #imageLiteral(resourceName: "Powerphases"), name: "Yeezy Powerphase",
+        let shoe1 = shoe(image: #imageLiteral(resourceName: "Powerphases"), name: "Solemate Received Request",
                          desc: "The shoe is highlighted by its all-black leather upper, then featuring gold Calabasas branding alongside, in addition to adidas tagging in green and red. Tonal laces accompany to round out the design details.",
                          price: 120)
         self.popUpViewContentHandler(shoe: shoe1)
