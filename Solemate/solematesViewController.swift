@@ -55,7 +55,7 @@ class solematesViewController: UITableViewController{
             super.viewDidLoad()
             
             //Add the edit button to the navigation bar
-            navigationItem.rightBarButtonItem = editButtonItem
+           // navigationItem.rightBarButtonItem = editButtonItem
            
             // Load any saved shoes, otherwise load sample shoes
             if let savedShoes = loadShoes() {
