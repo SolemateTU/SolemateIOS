@@ -285,7 +285,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     func sendImageToAWS(imageToSend: UIImage){
 
         // Set up the URL request
-        let AWS_get_endpoint: String = "https://veu0d6ijb3.execute-api.us-east-1.amazonaws.com/prod"
+        let AWS_get_endpoint: String = "https://3wpql46dsk.execute-api.us-east-1.amazonaws.com/prod/Recommend_Function/"
         guard let url = URL(string: AWS_get_endpoint) else {
             print("Error: cannot create URL")
             return
@@ -310,14 +310,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
                 print("Error: did not receive data")
                 return
             }
-            // parse the result as JSON, since that's what the API provides
+            // parse the result as JSON
             do {
                 guard let AWS_received_data = try JSONSerialization.jsonObject(with: responseData, options: [])
                     as? [String: Any] else {
                         print("did not receive data from AWS")
                         return
                 }
-                // let's just print it to prove we can access it
                 print("The data from AWS is: " + AWS_received_data.description)
                 self.recognizedName.text  = AWS_received_data.description
                //send data within shoe object to popup content handler to display
