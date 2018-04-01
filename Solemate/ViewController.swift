@@ -91,7 +91,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         let configuration = ARWorldTrackingConfiguration()
         sceneView.session.run(configuration)
         //continuously check the ML model
-        //continuouslyUpdate()
+        continuouslyUpdate()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -258,7 +258,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         //resumes the sceneview
         sceneView.isHidden = false
         sceneView.play(Any?.self)
-      //  self.continuouslyUpdate()
+        self.continuouslyUpdate()
     }
     
     
