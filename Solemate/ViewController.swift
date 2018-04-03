@@ -16,6 +16,18 @@ import Vision
 import ModelIO
 import MessageUI
 
+struct receivedShoeStruct: Codable{
+    var shoeTitle: String
+    var shoeDescription: String
+    var shoePrice: String
+    var stockImage: String
+}
+
+struct shoeToSendStruct: Codable {
+    let userID: String
+    let img: String
+}
+
 class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     //Main view components
     @IBOutlet weak var captureButton: UIButton!
@@ -318,6 +330,20 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         - imageToSend: Selected image
      */
     func sendImageToAWS(imageToSend: UIImage){
+        //convert UIimage to base64
+        let imageData: NSData = UIImagePNGRepresentation(imageToSend)! as NSData
+        let base64String = imageData.base64EncodedString(options: .lineLength64Characters)
+        
+        //create struct
+        let imageDataToSend = shoeToSendStruct(userID: "tug46894@temple.edu", img: base64String)
+        
+        let encoder = JSONEncoder()
+        //below can be removed later
+        encoder.outputFormatting = .prettyPrinted
+        
+        guard let jsonData = try? encoder.encode(imageDataToSend) else {
+            return
+        }
 
         // Set up the URL request
         let AWS_get_endpoint: String = "https://3wpql46dsk.execute-api.us-east-1.amazonaws.com/prod/identification-function"
@@ -333,7 +359,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         request.httpMethod = "POST"
         //add json data to the request
         request.httpBody = jsonData
-        
+
         // set up the session
         let config = URLSessionConfiguration.default
         let session = URLSession(configuration: config)
@@ -347,20 +373,23 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
                 print(error!)
                 return
             }
-            // make sure we got data
+
+            //print response to check it
+            if let responseData2 = data, let utf8Representation = String(data: responseData2, encoding: .utf8) {
+                print("response: ", utf8Representation)
+            }
+
+           // make sure we got data
             guard let responseData = data else {
                 print("Error: did not receive data")
                 return
             }
             // parse the result as JSON
+            let decoder = JSONDecoder()
             do {
-                guard let AWS_received_data = try JSONSerialization.jsonObject(with: responseData, options: [])
-                    as? [String: Any] else {
-                        print("did not receive data from AWS")
-                        return
-                }
-                print("The data from AWS is: " + AWS_received_data.description)
-                self.recognizedName.text  = AWS_received_data.description
+                let receivedShoe = try decoder.decode(receivedShoeStruct.self, from: responseData)
+                print("The data from AWS is: " + receivedShoe.shoeDescription)
+                //self.recognizedName.text  = receivedShoe.shoeTitle
                //send data within shoe object to popup content handler to display
                // let  shoe = shoe(image: , name: "",
                //                       desc: "",
