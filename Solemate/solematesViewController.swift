@@ -55,7 +55,7 @@ class solematesViewController: UITableViewController{
             super.viewDidLoad()
             
             //Add the edit button to the navigation bar
-           // navigationItem.rightBarButtonItem = editButtonItem
+            navigationItem.rightBarButtonItem = editButtonItem
            
             // Load any saved shoes, otherwise load sample shoes
             if let savedShoes = loadShoes() {
@@ -92,7 +92,8 @@ class solematesViewController: UITableViewController{
            shoeList += [shoe1,shoe2,shoe3]
             
         }
-        
+    
+        //Send shoe object selected to detail vew controller
         override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
             
             super.prepare(for: segue, sender: sender)

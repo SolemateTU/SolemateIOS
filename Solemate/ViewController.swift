@@ -91,7 +91,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         let configuration = ARWorldTrackingConfiguration()
         sceneView.session.run(configuration)
         //continuously check the ML model
-        //continuouslyUpdate()
+        continuouslyUpdate()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -101,7 +101,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         super.viewWillDisappear(animated)
     }
     
-    /* A forever loop to keep checking the on-phone ML model for what object is in the screen. Runs 2 times per second */
+    /**
+     A forever loop to keep checking the on-phone ML model for what object is in the screen. Runs 2 times per second.
+     */
     func continuouslyUpdate() {
          if self.selectedView.isHidden == true{
         //use new thread
@@ -156,7 +158,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         recognizedName.text = shoe.name
     }
     
-    //handling the selection from camera roll
+    /**
+    Handle the selection from camera roll
+     */
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]){
         //make sure an image was picked
         if let imagePicked = info[UIImagePickerControllerOriginalImage] as? UIImage {
@@ -168,7 +172,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     }
     }// end imagePickerController
     
-    //method to query on-phone ML model by taking the ARKit sceneview's current frame
+    /**
+     Query on-phone ML model by taking the ARKit sceneview's current frame to see if there is a shoe in the frame
+     */
     func detect(){
         guard let model = try? VNCoreMLModel(for: Resnet50().model) else{
             fatalError("loading core ML model failed")
@@ -258,12 +264,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         //resumes the sceneview
         sceneView.isHidden = false
         sceneView.play(Any?.self)
-      //  self.continuouslyUpdate()
+        self.continuouslyUpdate()
     }
     
     
     
-    //method to add AR shoe node near recognized shoe
+    /**
+     Adds AR shoe node near recognized shoe
+     */
     func displayARShoe() -> Void {
         //erase the old shoe nodes so we only display one at a time
         eraseARNodes(nodeNameToErase: "shoe_node", sceneView: self.sceneView)
@@ -304,23 +312,34 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         
     }
     
-    
+    /**
+    Sends selected image to AWS for recognition of model
+     - Parameters:
+        - imageToSend: Selected image
+     */
     func sendImageToAWS(imageToSend: UIImage){
 
         // Set up the URL request
-        let AWS_get_endpoint: String = "https://3wpql46dsk.execute-api.us-east-1.amazonaws.com/prod/Recommend_Function/"
+        let AWS_get_endpoint: String = "https://3wpql46dsk.execute-api.us-east-1.amazonaws.com/prod/identification-function"
         guard let url = URL(string: AWS_get_endpoint) else {
             print("Error: cannot create URL")
             return
         }
-        let urlRequest = URLRequest(url: url)
+        var request = URLRequest(url: url)
+        //sending the request in JSON
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        //expecting a response in JSON
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Accept")
+        request.httpMethod = "POST"
+        //add json data to the request
+        request.httpBody = jsonData
         
         // set up the session
         let config = URLSessionConfiguration.default
         let session = URLSession(configuration: config)
         
         // make the request
-        let task = session.dataTask(with: urlRequest) {
+        let task = session.dataTask(with: request) {
             (data, response, error) in
             // check for any errors
             guard error == nil else {
@@ -351,6 +370,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
                 print("error trying to convert data to JSON")
                 return
             }
+ 
         }
         task.resume()
     }
