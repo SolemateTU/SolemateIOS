@@ -101,7 +101,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         super.viewWillDisappear(animated)
     }
     
-    /* A forever loop to keep checking the on-phone ML model for what object is in the screen. Runs 2 times per second */
+    /**
+     A forever loop to keep checking the on-phone ML model for what object is in the screen. Runs 2 times per second.
+     */
     func continuouslyUpdate() {
          if self.selectedView.isHidden == true{
         //use new thread
@@ -156,7 +158,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         recognizedName.text = shoe.name
     }
     
-    //handling the selection from camera roll
+    /**
+    Handle the selection from camera roll
+     */
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]){
         //make sure an image was picked
         if let imagePicked = info[UIImagePickerControllerOriginalImage] as? UIImage {
@@ -168,7 +172,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     }
     }// end imagePickerController
     
-    //method to query on-phone ML model by taking the ARKit sceneview's current frame
+    /**
+     Query on-phone ML model by taking the ARKit sceneview's current frame to see if there is a shoe in the frame
+     */
     func detect(){
         guard let model = try? VNCoreMLModel(for: Resnet50().model) else{
             fatalError("loading core ML model failed")
@@ -263,7 +269,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     
     
     
-    //method to add AR shoe node near recognized shoe
+    /**
+     Adds AR shoe node near recognized shoe
+     */
     func displayARShoe() -> Void {
         //erase the old shoe nodes so we only display one at a time
         eraseARNodes(nodeNameToErase: "shoe_node", sceneView: self.sceneView)
@@ -304,27 +312,44 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         
     }
     
-    
+    /**
+    Sends selected image to AWS for recognition of model
+     - Parameters:
+        - imageToSend: Selected image
+     */
     func sendImageToAWS(imageToSend: UIImage){
-            //temporarily calling pop up handler here but delete when we get success call back
-        let shoe1 = shoe(image: #imageLiteral(resourceName: "Powerphases"), name: "Yeezy PowerPhase",
-                         desc: "The shoe is highlighted by its all-black leather upper, then featuring gold Calabasas branding alongside, in addition to adidas tagging in green and red. Tonal laces accompany to round out the design details.",
-                         price: 120)
-        self.popUpViewContentHandler(shoe: shoe1)
+        ///converted UIImage to NSData
+        let imageData:Data =  UIImagePNGRepresentation(imageToSend)!
+        
+        ///base64 image to send
+        let base64String = imageData.base64EncodedString()
+  
+        ///JSON data to send to aws
+        let json: [String: Any] = ["userID": "iOS",
+                                   "img": base64String]
+        let jsonData = try? JSONSerialization.data(withJSONObject: json)
+        
         // Set up the URL request
-        let AWS_get_endpoint: String = "https://3wpql46dsk.execute-api.us-east-1.amazonaws.com/prod/Recommend_Function/"
+        let AWS_get_endpoint: String = "https://3wpql46dsk.execute-api.us-east-1.amazonaws.com/prod/identification-function"
         guard let url = URL(string: AWS_get_endpoint) else {
             print("Error: cannot create URL")
             return
         }
-        let urlRequest = URLRequest(url: url)
+        var request = URLRequest(url: url)
+        //sending the request in JSON
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        //expecting a response in JSON
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Accept")
+        request.httpMethod = "POST"
+        //add json data to the request
+        request.httpBody = jsonData
         
         // set up the session
         let config = URLSessionConfiguration.default
         let session = URLSession(configuration: config)
         
         // make the request
-        let task = session.dataTask(with: urlRequest) {
+        let task = session.dataTask(with: request) {
             (data, response, error) in
             // check for any errors
             guard error == nil else {
@@ -332,30 +357,33 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
                 print(error!)
                 return
             }
-            // make sure we got data
-            guard let responseData = data else {
-                print("Error: did not receive data")
-                return
-            }
-            // parse the result as JSON, since that's what the API provides
-            do {
-          //      guard let AWS_received_data = try JSONSerialization.jsonObject(with: responseData, options: [])
-           //         as? [String: Any] else {
-            //            print("did not receive data from AWS")
-               //         return
-               // }
+            
+            //Response, and parsing JSON to shoe object
+          do {
                 
-                let convertedString = String(data: responseData, encoding: String.Encoding.utf8)
-                // let's just print it to prove we can access it
-                print("The data from AWS is: " + convertedString!)
-                //update name of shoe to show returned string
-                 DispatchQueue.main.async {
-                self.recognizedName.text = convertedString!
+                //if we got data back parse the result as JSON
+             if let responseData = data,
+                let responseJSON = try JSONSerialization.jsonObject(with: responseData) as? [String: Any],
+                let name = responseJSON["shoeTitle"] as? String,
+                let desc =  responseJSON["shoeDescription"] as? String,
+                let price = responseJSON["shoePrice"] as? Double,
+                let image = responseJSON["stockImage"] as? String {
+                
+                ///Decoded data from AWS base64 response
+                let dataDecoded : Data = Data(base64Encoded: image, options: .ignoreUnknownCharacters)!
+                
+                ///UIImage from the data decoded from base 64
+                let decodedImage:UIImage = UIImage(data: dataDecoded)!
+                
+                 ///Shoe object made from AWS response
+                let shoeDecoded = shoe(image:decodedImage, name: name, desc:desc, price: price)
+                self.popUpViewContentHandler(shoe: shoeDecoded)
                 }
-            } catch  {
-                print("error trying to convert data to JSON")
-                return
+            
+            } catch {
+                print("Error deserializing JSON: \(error)")
             }
+ 
         }
         task.resume()
     }
