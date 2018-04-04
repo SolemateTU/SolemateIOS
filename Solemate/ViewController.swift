@@ -388,13 +388,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
                 
                 ///UIImage from the data decoded from base 64
                 let decodedImage = UIImage(data: dataDecoded)!
-                
-               //send data within shoe object to popup content handler to display
+            
+                //convert response price to double
+                let priceDouble = Double(receivedShoe.shoePrice.replacingOccurrences(of: "$", with: ""))
+
+
+               ///Shoe object created with data from AWS
                let  shoeDecoded = shoe(image:decodedImage , name: receivedShoe.shoeTitle,
                                      desc: receivedShoe.shoeDescription,
-                                      price: 120)
+                                     price: priceDouble!)
+                print(priceDouble)
                 DispatchQueue.main.async {
-                    ///Shoe object made from AWS response
+                    ///Send shoe to popup content handler to display
                     self.popUpViewContentHandler(shoe: shoeDecoded)
                 }
       
