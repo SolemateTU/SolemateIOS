@@ -52,6 +52,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     @IBOutlet weak var recognizedName: UILabel!
      ///Image of recognized shoe, returned from AWS
     @IBOutlet weak var recognizedImage: UIImageView!
+    ///See details button, pushes to detail view
+    @IBOutlet weak var seeDetails: UIButton!
+    @IBOutlet weak var doesntSeemRight: UILabel!
+    @IBOutlet weak var tryAgain: UIButton!
+    
+    ///Loader
+    @IBOutlet weak var loader: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,7 +66,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         let scene = SCNScene()
         // Set the scene to the view
         sceneView.scene = scene
-        
         //capture button layout
         captureButton.layer.cornerRadius = 37.5
         captureButton.layer.shadowRadius = 3
@@ -85,11 +91,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         popUpView.layer.shadowOffset = CGSize(width: 0, height: 0)
         popUpView.layer.shadowOpacity = 0.8
         topOfPopUp = popUpView.frame.origin.y
+        //pop up loader
+        loader.animationImages = [UIImage(named: "0.png")!,UIImage(named: "1.png")!,UIImage(named: "2.png")!,UIImage(named: "3.png")!,UIImage(named: "4.png")!,UIImage(named: "5.png")!,UIImage(named: "6.png")!,UIImage(named: "7.png")!,UIImage(named: "8.png")!,UIImage(named: "9.png")!,UIImage(named: "10.png")!,UIImage(named: "11.png")!,UIImage(named: "12.png")!,UIImage(named: "13.png")!,UIImage(named: "14.png")!,UIImage(named: "15.png")!,UIImage(named: "16.png")!]
+        loader.animationDuration = 4.8
         //pop up image layout
         recognizedImage.layer.cornerRadius = 70
         recognizedImage.layer.borderWidth = 1;
         recognizedImage.layer.borderColor = UIColor.lightGray.cgColor
         recognizedImage.layer.masksToBounds = true;
+        
+        
         }
 
     override func didReceiveMemoryWarning() {
@@ -147,6 +158,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
             //Send to AWS server
             sendImageToAWS(imageToSend: selectedImage!)
         
+            loader.startAnimating()
             //Trigger Pop Up
             popUpView.frame.origin.y = topOfPopUp + 250
             popUpView.isHidden = false
@@ -163,11 +175,22 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
      - loads response from aws into pop up view
      */
     func popUpViewContentHandler(shoe: shoe) {
+       //stop the loader and hide it
+        loader.stopAnimating()
+        loader.isHidden = true
         //image
         recognizedImage.image = shoe.image
+        recognizedImage.isHidden = false
 
         //name
         recognizedName.text = shoe.name
+        recognizedName.isHidden = false
+        
+        //show other ui aspects
+        seeDetails.isHidden = false
+        doesntSeemRight.isHidden = false
+        tryAgain.isHidden = false
+
     }
     
     /**
@@ -272,6 +295,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         
         //hide pop up view
         popUpView.isHidden = true
+        recognizedImage.isHidden = true
+        recognizedName.isHidden = true
+        seeDetails.isHidden = true
+        doesntSeemRight.isHidden = true
+        tryAgain.isHidden = true
+        loader.isHidden = false
         
         //resumes the sceneview
         sceneView.isHidden = false
@@ -392,12 +421,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
                 //convert response price to double
                 let priceDouble = Double(receivedShoe.shoePrice.replacingOccurrences(of: "$", with: ""))
 
-
                ///Shoe object created with data from AWS
                let  shoeDecoded = shoe(image:decodedImage , name: receivedShoe.shoeTitle,
                                      desc: receivedShoe.shoeDescription,
                                      price: priceDouble!)
-                print(priceDouble)
+
                 DispatchQueue.main.async {
                     ///Send shoe to popup content handler to display
                     self.popUpViewContentHandler(shoe: shoeDecoded)
