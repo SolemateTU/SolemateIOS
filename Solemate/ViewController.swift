@@ -20,7 +20,7 @@ struct receivedShoeStruct: Codable{
     var shoeTitle: String
     var shoeDescription: String
     var shoePrice: String
-    var stockImage: String
+    var shoeImage: String
 }
 
 struct shoeToSendStruct: Codable {
@@ -354,8 +354,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         var request = URLRequest(url: url)
         //sending the request in JSON
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-        //expecting a response in JSON
-        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Accept")
         request.httpMethod = "POST"
         //add json data to the request
         request.httpBody = jsonData
@@ -374,27 +372,32 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
                 return
             }
 
-            //print response to check it
-            if let responseData2 = data, let utf8Representation = String(data: responseData2, encoding: .utf8) {
-                print("response: ", utf8Representation)
-            }
-
            // make sure we got data
             guard let responseData = data else {
                 print("Error: did not receive data")
                 return
             }
+            
             // parse the result as JSON
             let decoder = JSONDecoder()
             do {
+                ///shoe recieved from AWS
                 let receivedShoe = try decoder.decode(receivedShoeStruct.self, from: responseData)
-                print("The data from AWS is: " + receivedShoe.shoeDescription)
-                //self.recognizedName.text  = receivedShoe.shoeTitle
+                ///image data decoded from base 64
+                let dataDecoded = Data(base64Encoded: receivedShoe.shoeImage, options: Data.Base64DecodingOptions.ignoreUnknownCharacters)!
+                
+                ///UIImage from the data decoded from base 64
+                let decodedImage = UIImage(data: dataDecoded)!
+                
                //send data within shoe object to popup content handler to display
-               // let  shoe = shoe(image: , name: "",
-               //                       desc: "",
-               //                       price: )
-              //popUpViewContentHandler(shoe: shoe)
+               let  shoeDecoded = shoe(image:decodedImage , name: receivedShoe.shoeTitle,
+                                     desc: receivedShoe.shoeDescription,
+                                      price: 120)
+                DispatchQueue.main.async {
+                    ///Shoe object made from AWS response
+                    self.popUpViewContentHandler(shoe: shoeDecoded)
+                }
+      
             } catch  {
                 print("error trying to convert data to JSON")
                 return
