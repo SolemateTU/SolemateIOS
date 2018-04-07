@@ -369,7 +369,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         let encoder = JSONEncoder()
         //below can be removed later
         encoder.outputFormatting = .prettyPrinted
-        
         guard let jsonData = try? encoder.encode(imageDataToSend) else {
             return
         }
@@ -430,7 +429,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
                     ///Send shoe to popup content handler to display
                     self.popUpViewContentHandler(shoe: shoeDecoded)
                 }
-      
+                if(priceDouble != 0){
+                solematesViewController().addShoe(shoe: shoeDecoded)
+                }
             } catch  {
                 print("error trying to convert data to JSON")
                 return

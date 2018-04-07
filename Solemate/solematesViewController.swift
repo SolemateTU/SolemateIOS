@@ -36,7 +36,7 @@ class solematesViewController: UITableViewController{
 
             return cell!
         }
-        
+
         // Override to edit the list of shoes
         override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
             if editingStyle == .delete {
@@ -135,6 +135,17 @@ class solematesViewController: UITableViewController{
         
         
         //MARK: Actions
+    
+        /**
+        Allows Camera view to add new shoes to the list
+        - Parameters:
+            - shoe: Shoe that was recognized
+        */
+       public func addShoe(shoe:shoe){
+            shoeList = loadShoes()!
+            shoeList.append(shoe)
+            saveShoes()
+        }
     
         /**
         Saves the shoes currently in the shoeList
