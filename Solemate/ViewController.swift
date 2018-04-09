@@ -359,8 +359,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         - imageToSend: Selected image
      */
     func sendImageToAWS(imageToSend: UIImage){
+        //compress image before sending as there is a limit
+        let  compression:CGFloat = 0.9;
         //convert UIimage to base64
-        let imageData: NSData = UIImagePNGRepresentation(imageToSend)! as NSData
+        let imageData: NSData = UIImageJPEGRepresentation(imageToSend, compression)! as NSData
+       
         let base64String = imageData.base64EncodedString(options: .lineLength64Characters)
         
         //create struct
@@ -405,6 +408,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
                 print("Error: did not receive data")
                 return
             }
+            //Debugging response
+            //let str = String(data: responseData, encoding: .utf8)
+            // print(str)
             
             // parse the result as JSON
             let decoder = JSONDecoder()
