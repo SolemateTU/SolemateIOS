@@ -26,6 +26,7 @@ struct receivedShoeStruct: Codable{
 struct shoeToSendStruct: Codable {
     let userID: String
     let img: String
+    let shoeID: String
 }
 
 class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
@@ -354,20 +355,91 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     }
     
     /**
+     First AWS Request sends Image to Identification Function
+     - Parameters:
+        - imageToSend: Base 64 Image String to be identified
+     - Returns
+     Shoe ID
+     */
+    func firstRequest(imageToSend:String) -> String {
+        ///identified shoe ID
+        var shoeID = "Unidentified_shoe"
+    // Set up the first URL request
+    let AWS_get_endpoint: String = "https://1hoad2m4ka.execute-api.us-east-1.amazonaws.com/dev2"
+    guard let url = URL(string: AWS_get_endpoint) else {
+    print("Error: cannot create URL")
+    return "Unidentified_shoe"
+    }
+    var request = URLRequest(url: url)
+    request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+    request.httpMethod = "POST"
+    // set up the session
+    let config = URLSessionConfiguration.default
+    let session = URLSession(configuration: config)
+        
+    do {
+        let jsonObject: [String: Any] = ["img": imageToSend]
+        request.httpBody = try JSONSerialization.data(withJSONObject: jsonObject)
+     //   let str = String(data: request.httpBody!, encoding: .utf8)
+      //  print("*************************************************************")
+     //  print(str)
+    } catch let error {
+        print(error.localizedDescription)
+    }
+       
+      //  print(request.value(forHTTPHeaderField: "Content-Type"))
+        let task = session.dataTask(with: request) {
+            (data, response, error) in
+            // check for any errors
+            guard error == nil else {
+                print("error calling endpoint")
+                print(error!)
+                return
+            }
+            // make sure we got data
+            guard let responseData = data else {
+                print("Error: did not receive data")
+                return
+            }
+        do {
+            //Debugging response
+            let str = String(data: responseData, encoding: .utf8)
+            print(str)
+            if let json = try JSONSerialization.jsonObject(with: responseData) as? [String: Any] {
+                shoeID = json["shoeID"]  as! String
+                shoeID =  shoeID.replacingOccurrences(of: "_Stock", with: "")
+                shoeID =  shoeID.replacingOccurrences(of: "_stock", with: "")
+                print(json)
+                print(shoeID)
+                }
+        } catch let error {
+            print(error.localizedDescription)
+        }
+    }
+    task.resume()
+    return shoeID
+    }
+    
+    /**
     Sends selected image to AWS for recognition of model
      - Parameters:
         - imageToSend: Selected image
      */
     func sendImageToAWS(imageToSend: UIImage){
-        //compress image before sending as there is a limit
+        //compress image before sending, as there is a limit.
         let  compression:CGFloat = 0.9;
         //convert UIimage to base64
         let imageData: NSData = UIImageJPEGRepresentation(imageToSend, compression)! as NSData
-       
-        let base64String = imageData.base64EncodedString(options: .lineLength64Characters)
         
+        let base64String = imageData.base64EncodedString(options: .lineLength64Characters)
+    //   let shoeList = ["Air_Jordan_1","Puma_Suede_Classic","Air_Jordan_2","Air_Jordan_5","Yeezy_700","Yeezy_500","Raf_Simons_Ozweego","Air_Jordan_7","Air_Jordan_12"]
+        // let diceRoll = Int(arc4random_uniform(9))
+      //  print(diceRoll)
+        ///Identified Shoe ID
+        let shoeID = firstRequest(imageToSend: base64String)
+       //     shoeList[diceRoll]
         //create struct
-        let imageDataToSend = shoeToSendStruct(userID: "tug46894@temple.edu", img: base64String)
+        let imageDataToSend = shoeToSendStruct(userID: "tug46894@temple.edu", img: base64String, shoeID: shoeID)
         
         let encoder = JSONEncoder()
         //below can be removed later
@@ -376,7 +448,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
             return
         }
 
-        // Set up the URL request
+        // Set up the Second URL request
         let AWS_get_endpoint: String = "https://3wpql46dsk.execute-api.us-east-1.amazonaws.com/prod/identification-function"
         guard let url = URL(string: AWS_get_endpoint) else {
             print("Error: cannot create URL")
@@ -384,7 +456,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         }
         var request = URLRequest(url: url)
         //sending the request in JSON
-        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpMethod = "POST"
         //add json data to the request
         request.httpBody = jsonData
