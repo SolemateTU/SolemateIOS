@@ -519,14 +519,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         
     }
     
-    
-       override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    //See details segue
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let detailsViewController = segue.destination as? shoeDetailsViewController {
                 detailsViewController.selectedShoe = identifiedShoe
             }
             
-        }
-        
+    }
     
     
 }//end class ViewController

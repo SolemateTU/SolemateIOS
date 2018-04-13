@@ -116,24 +116,7 @@ class solematesViewController: UITableViewController{
             }
             
         }
-        
-        //MARK: Navigation
-   /* Use this to add recently recognized shoes from the viewController scene
-     @IBAction func unwindToPinsList(sender: UIStoryboardSegue) {
-            if let sourceViewController = sender.source as? ViewController, let shoe = sourceViewController.shoe {
-                // Add a new task.
-                let newIndexPath = IndexPath(row: shoeList.count, section: 0)
-            //get more info about savedShoe from database
-            //let savedShoe = shoe()
-                shoe.append(shoe)
-                tableView.insertRows(at: [newIndexPath], with: .automatic)
-                saveShoes()
-            }
-            
-        }*/
-        
-        
-        
+    
         //MARK: Actions
     
         /**
@@ -143,11 +126,15 @@ class solematesViewController: UITableViewController{
         */
        public func addShoe(shoe:shoe){
             shoeList = loadShoes()!
-            if  !shoeList.contains(shoe) {
+        for i in 0...shoeList.count{
+            if(shoeList[i].name == shoe.name){
+                break
+            }else if (i == shoeList.count){
                 shoeList.append(shoe)
                 saveShoes()
             }
         }
+    }
     
         /**
         Saves the shoes currently in the shoeList
