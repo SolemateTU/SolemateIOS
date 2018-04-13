@@ -111,7 +111,7 @@ class solematesViewController: UITableViewController{
                 }
                 
                 let selected = shoeList[indexPath.row]
-                detailsViewController.shoe = selected
+                detailsViewController.selectedShoe = selected
                 print(selected)
             }
             

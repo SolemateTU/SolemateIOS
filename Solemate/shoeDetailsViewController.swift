@@ -8,10 +8,11 @@
 
 import Foundation
 import UIKit
+import os.log
 
-class shoeDetailsViewController: UIViewController{
+class shoeDetailsViewController: UIViewController, UITableViewDataSource{
     ///Shoe details to be displayed
-    var shoe : shoe!
+    var selectedShoe : shoe!
     ///Shoe Stock Image
     @IBOutlet weak var shoeImage: UIImageView!
     ///Shoe name
@@ -24,11 +25,18 @@ class shoeDetailsViewController: UIViewController{
     @IBOutlet weak var similarShoesTableView: UITableView!
     ///Navigation title
     @IBOutlet weak var navTitle: UINavigationItem!
+     var similarShoeList = [shoe]()
+    
+
+
     override func viewDidLoad() {
         //if shoe is not empty
-        if shoe != nil {
-            navTitle.title = shoe.name
-            loadShoeDetailsHandler(shoe: shoe)
+        if selectedShoe != nil {
+            navTitle.title = selectedShoe.name
+            loadShoeDetailsHandler(shoe: selectedShoe)
+            loadSample()
+          //  dump(similarShoeList)
+            similarShoesTableView.dataSource = self
         }
     }
     
@@ -41,11 +49,37 @@ class shoeDetailsViewController: UIViewController{
     }
     
     override func viewDidAppear(_ animated: Bool) {
+       similarShoesTableView.reloadData()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
     }
+    
+    func numberOfSections(in similarShoesTableView: UITableView) -> Int{
+        return 1
+    }
+    
+    func tableView (_ similarShoesTableView : UITableView, numberOfRowsInSection section: Int) -> Int {
+        print(similarShoeList.count)
+        return similarShoeList.count
+    }
+    
+    func tableView( _ similarShoesTableView:UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        ///Storyboard cell identifier
+        let cellIdentifier = "shoeCell"
+        
+        ///Local refrence to the reusable cell view
+        let cell = similarShoesTableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? shoeCell
+        
+        let shoe = similarShoeList[indexPath.row]
+        cell?.shoeImage.image = shoe.image
+        cell?.shoeName.text = shoe.name
+        cell?.shoeDescription.text = shoe.desc
+        dump(cell)
+        return cell!
+    }
+
     
     /**
      Handles displaying details of shoes in UI
@@ -60,6 +94,47 @@ class shoeDetailsViewController: UIViewController{
         shoeDescription.sizeToFit()
         //price
         shoePrice.text = "$\(Int(shoe.price))"
+    }
+    
+    //Send shoe object selected to detail vew controller
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        super.prepare(for: segue, sender: sender)
+        
+        // Configure the destination view controller when
+        if let selectedShoe = sender as? shoeCell{
+            
+            
+            guard let detailsViewController = segue.destination as? shoeDetailsViewController else {
+                fatalError("Unexpected destination: \(segue.destination)")
+            }
+            
+            guard let indexPath = similarShoesTableView.indexPath(for: selectedShoe) else {
+                fatalError("The selected cell is not being displayed by the table")
+            }
+            
+            let selected = similarShoeList[indexPath.row]
+            detailsViewController.selectedShoe = selected
+            print(selected)
+        }
+        
+    }
+    
+    /**
+     Sample shoes preloaded on application
+     */
+    private func loadSample() {
+        let shoe1 = shoe(image: #imageLiteral(resourceName: "Powerphases"), name: "Yeezy Powerphase",
+                         desc: "The shoe is highlighted by its all-black leather upper, then featuring gold Calabasas branding alongside, in addition to adidas tagging in green and red. Tonal laces accompany to round out the design details.",
+                         price: 120)
+        let shoe2 = shoe(image: #imageLiteral(resourceName: "Powerphases"), name: "Yeezy Powerphase",
+                         desc: "The shoe is highlighted by its all-black leather upper, then featuring gold Calabasas branding alongside, in addition to adidas tagging in green and red. Tonal laces accompany to round out the design details.",
+                         price: 120)
+        let shoe3 = shoe(image: #imageLiteral(resourceName: "Powerphases"), name: "Yeezy Powerphase",
+                         desc: "The shoe is highlighted by its all-black leather upper, then featuring gold Calabasas branding alongside, in addition to adidas tagging in green and red. Tonal laces accompany to round out the design details.",
+                         price: 120)
+        similarShoeList += [shoe1,shoe2,shoe3]
+
     }
     
 }
