@@ -90,6 +90,7 @@ class solematesViewController: UITableViewController{
                              desc: "The shoe is highlighted by its all-black leather upper, then featuring gold Calabasas branding alongside, in addition to adidas tagging in green and red. Tonal laces accompany to round out the design details.",
                              price: 120)
            shoeList += [shoe1,shoe2,shoe3]
+            saveShoes()
             
         }
     
@@ -126,10 +127,11 @@ class solematesViewController: UITableViewController{
         */
        public func addShoe(shoe:shoe){
             shoeList = loadShoes()!
-        for i in 0...shoeList.count{
+        print("shoeList.count ", shoeList.count)
+        for i in 0...shoeList.count-1{
             if(shoeList[i].name == shoe.name){
                 break
-            }else if (i == shoeList.count){
+            }else if (i == shoeList.count-1){
                 shoeList.append(shoe)
                 saveShoes()
             }
