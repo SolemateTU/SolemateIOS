@@ -28,6 +28,11 @@
 	<string>To save all photos you take</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>To allow you to upload photos</string>
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsArbitraryLoads</key>
+        <true/>
+    </dict>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

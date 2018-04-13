@@ -143,8 +143,10 @@ class solematesViewController: UITableViewController{
         */
        public func addShoe(shoe:shoe){
             shoeList = loadShoes()!
-            shoeList.append(shoe)
-            saveShoes()
+            if  !shoeList.contains(shoe) {
+                shoeList.append(shoe)
+                saveShoes()
+            }
         }
     
         /**

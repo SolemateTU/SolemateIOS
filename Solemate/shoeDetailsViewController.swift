@@ -35,8 +35,7 @@ class shoeDetailsViewController: UIViewController, UITableViewDataSource{
             navTitle.title = selectedShoe.name
             loadShoeDetailsHandler(shoe: selectedShoe)
             loadSample()
-          //  dump(similarShoeList)
-            similarShoesTableView.dataSource = self
+            similarShoesTableView.dataSource = self        
         }
     }
     
@@ -61,7 +60,6 @@ class shoeDetailsViewController: UIViewController, UITableViewDataSource{
     }
     
     func tableView (_ similarShoesTableView : UITableView, numberOfRowsInSection section: Int) -> Int {
-        print(similarShoeList.count)
         return similarShoeList.count
     }
     
@@ -76,7 +74,6 @@ class shoeDetailsViewController: UIViewController, UITableViewDataSource{
         cell?.shoeImage.image = shoe.image
         cell?.shoeName.text = shoe.name
         cell?.shoeDescription.text = shoe.desc
-        dump(cell)
         return cell!
     }
 
