@@ -11,6 +11,8 @@ import UIKit
 import os.log
 
 class shoeDetailsViewController: UIViewController, UITableViewDataSource{
+    
+    @IBOutlet weak var scrollView: UIScrollView!
     ///Shoe details to be displayed
     var selectedShoe : shoe!
     ///Shoe Stock Image
@@ -26,8 +28,6 @@ class shoeDetailsViewController: UIViewController, UITableViewDataSource{
     ///Navigation title
     @IBOutlet weak var navTitle: UINavigationItem!
      var similarShoeList = [shoe]()
-    
-
 
     override func viewDidLoad() {
         //if shoe is not empty
@@ -35,7 +35,7 @@ class shoeDetailsViewController: UIViewController, UITableViewDataSource{
             navTitle.title = selectedShoe.name
             loadShoeDetailsHandler(shoe: selectedShoe)
             loadSample()
-            similarShoesTableView.dataSource = self        
+            similarShoesTableView.dataSource = self
         }
     }
     
@@ -48,7 +48,6 @@ class shoeDetailsViewController: UIViewController, UITableViewDataSource{
     }
     
     override func viewDidAppear(_ animated: Bool) {
-       similarShoesTableView.reloadData()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -60,6 +59,7 @@ class shoeDetailsViewController: UIViewController, UITableViewDataSource{
     }
     
     func tableView (_ similarShoesTableView : UITableView, numberOfRowsInSection section: Int) -> Int {
+        print(similarShoeList.count)
         return similarShoeList.count
     }
     
