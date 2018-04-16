@@ -457,7 +457,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         request.httpMethod = "POST"
         //add json data to the request
         request.httpBody = jsonData
-
+        
         // set up the session
         let config = URLSessionConfiguration.default
         let session = URLSession(configuration: config)
@@ -506,6 +506,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
                 }
             } catch  {
                 print("error trying to convert data to JSON")
+     
              /*shoeDecoded = error
                 DispatchQueue.main.async {
                     ///Send shoe to popup content handler to display

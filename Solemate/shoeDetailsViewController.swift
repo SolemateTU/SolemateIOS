@@ -59,7 +59,6 @@ class shoeDetailsViewController: UIViewController, UITableViewDataSource{
     }
     
     func tableView (_ similarShoesTableView : UITableView, numberOfRowsInSection section: Int) -> Int {
-        print(similarShoeList.count)
         return similarShoeList.count
     }
     
@@ -112,7 +111,6 @@ class shoeDetailsViewController: UIViewController, UITableViewDataSource{
             
             let selected = similarShoeList[indexPath.row]
             detailsViewController.selectedShoe = selected
-            print(selected)
         }
         
     }
