@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		13BFF9F02085395A00219466 /* userPhotosViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13BFF9EF2085395A00219466 /* userPhotosViewController.swift */; };
 		D9081DDF205DC10D00076643 /* Resnet50.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = D9081DDE205DC10C00076643 /* Resnet50.mlmodel */; };
 		D937BA1E205EC7E600984660 /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = D937BA1D205EC7E600984660 /* art.scnassets */; };
 		D937BA20205EC7F500984660 /* textures in Resources */ = {isa = PBXBuildFile; fileRef = D937BA1F205EC7F500984660 /* textures */; };
@@ -23,6 +24,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		13BFF9EF2085395A00219466 /* userPhotosViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = userPhotosViewController.swift; sourceTree = "<group>"; };
 		D9081DDE205DC10C00076643 /* Resnet50.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = Resnet50.mlmodel; sourceTree = "<group>"; };
 		D937BA1D205EC7E600984660 /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
 		D937BA1F205EC7F500984660 /* textures */ = {isa = PBXFileReference; lastKnownFileType = folder; path = textures; sourceTree = "<group>"; };
@@ -75,6 +77,7 @@
 				D9081DDE205DC10C00076643 /* Resnet50.mlmodel */,
 				D97A5B1E2062B214005B1C7E /* shoeDetailsViewController.swift */,
 				D97258DE203A398F000ACE77 /* Main.storyboard */,
+				13BFF9EF2085395A00219466 /* userPhotosViewController.swift */,
 				D97258E4203A398F000ACE77 /* Assets.xcassets */,
 				D97258E6203A398F000ACE77 /* LaunchScreen.storyboard */,
 				D937BA1F205EC7F500984660 /* textures */,
@@ -169,6 +172,7 @@
 				D9C4772020478D000064DAD8 /* solematesViewController.swift in Sources */,
 				D97258E3203A398F000ACE77 /* Solemate.xcdatamodeld in Sources */,
 				D97A5B1F2062B214005B1C7E /* shoeDetailsViewController.swift in Sources */,
+				13BFF9F02085395A00219466 /* userPhotosViewController.swift in Sources */,
 				D9081DDF205DC10D00076643 /* Resnet50.mlmodel in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

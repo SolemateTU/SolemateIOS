@@ -23,6 +23,7 @@ struct receivedShoeStruct: Codable{
     var shoeImage: String
 }
 
+
 struct shoeToSendStruct: Codable {
     let userID: String
     let img: String
