@@ -356,7 +356,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     /**
      First AWS Request, sends selected image to Identification Function, once identified calls second AWS Function
      - Parameters:
-        - imageToSend: Base 64 Image String to be identified
+        - imageToSend: Image to be identified
      */ 
     func identificationAPICall(imageToSend:UIImage)  {
         //compress image before sending, as there is a limit.
