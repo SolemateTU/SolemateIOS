@@ -82,13 +82,13 @@ class solematesViewController: UITableViewController{
         private func loadSample() {
          let shoe1 = shoe(image: #imageLiteral(resourceName: "Powerphases"), name: "Yeezy Powerphase",
                           desc: "The shoe is highlighted by its all-black leather upper, then featuring gold Calabasas branding alongside, in addition to adidas tagging in green and red. Tonal laces accompany to round out the design details.",
-                          price: 120)
+                          price: 120, url:"google.com/")
          let shoe2 = shoe(image: #imageLiteral(resourceName: "Powerphases"), name: "Yeezy Powerphase",
                              desc: "The shoe is highlighted by its all-black leather upper, then featuring gold Calabasas branding alongside, in addition to adidas tagging in green and red. Tonal laces accompany to round out the design details.",
-                             price: 120)
+                             price: 120, url:"google.com/")
         let shoe3 = shoe(image: #imageLiteral(resourceName: "Powerphases"), name: "Yeezy Powerphase",
                              desc: "The shoe is highlighted by its all-black leather upper, then featuring gold Calabasas branding alongside, in addition to adidas tagging in green and red. Tonal laces accompany to round out the design details.",
-                             price: 120)
+                             price: 120, url:"google.com/")
            shoeList += [shoe1,shoe2,shoe3]
             saveShoes()
             
@@ -125,7 +125,9 @@ class solematesViewController: UITableViewController{
             - shoe: Shoe that was recognized
         */
        public func addShoe(shoe:shoe){
-            shoeList = loadShoes()!
+        if let savedShoes = loadShoes() {
+            shoeList += savedShoes
+
         print("shoeList.count ", shoeList.count)
         for i in 0...shoeList.count-1{
             if(shoeList[i].name == shoe.name){
@@ -135,6 +137,33 @@ class solematesViewController: UITableViewController{
                 saveShoes()
             }
         }
+        }else{
+            shoeList.append(shoe)
+        }
+        
+    }
+    /**
+     Allows Camera view to add new shoes to the list
+     - Parameters:
+     - shoe: Shoe that was recognized
+     - Returns: shoe: a shoe that it either has saved or a shoe with name _
+     */
+    public func check(shoeID:String)-> shoe?{
+       let shoeName = shoeID.replacingOccurrences(of: "_", with: "")
+        
+        if let savedShoes = loadShoes() {
+            shoeList += savedShoes
+            
+            print("shoeList.count ", shoeList.count)
+            for i in 0...shoeList.count-1{
+                if(shoeList[i].name == shoeName){
+                    return shoeList[i]
+                }else {
+                    return nil
+                }
+            }
+        }
+        return nil
     }
     
         /**

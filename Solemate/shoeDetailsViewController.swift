@@ -25,7 +25,7 @@ class shoeDetailsViewController: UIViewController, UITableViewDataSource{
     ///Shoe name
     @IBOutlet weak var shoeName: UILabel!
     ///Shoe price
-    @IBOutlet weak var shoePrice: UILabel!
+    @IBOutlet weak var shoePrice: UIButton!
     ///Shoe description
     @IBOutlet weak var shoeDescription: UILabel!
     ///Table view for similar shoes
@@ -95,9 +95,21 @@ class shoeDetailsViewController: UIViewController, UITableViewDataSource{
         shoeDescription.text = shoe.desc
         shoeDescription.sizeToFit()
         //price
-        shoePrice.text = "$\(Int(shoe.price))"
+        print(shoe.price)
+        let lowestPrice = "$\(Int(shoe.price))"
+//        shoePrice.setAttributedTitle(lowestPrice, for: .normal)
+        if let attributedTitle = shoePrice.attributedTitle(for: .normal) {
+            let mutableAttributedTitle = NSMutableAttributedString(attributedString: attributedTitle)
+            mutableAttributedTitle.replaceCharacters(in: NSMakeRange(0, mutableAttributedTitle.length), with: lowestPrice)
+            shoePrice.setAttributedTitle(mutableAttributedTitle, for: .normal)
+        }
     }
     
+    @IBAction func shoePriceLink(_ sender: UIButton) {
+        if let url = URL(string: selectedShoe.url){
+            UIApplication.shared.openURL(url)
+        }
+    }
     //Send shoe object selected to detail vew controller
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
@@ -176,21 +188,27 @@ class shoeDetailsViewController: UIViewController, UITableViewDataSource{
                 let str = String(data: responseData, encoding: .utf8)
                 print(str)
                 if let json = try JSONSerialization.jsonObject(with: responseData) as? [String: Any],
-                    var shoe1 =  json["shoeID-1"]  as? String,
-                    var shoe2 =  json["shoeID-2"]  as? String,
-                    var  shoe3 =  json["shoeID-3"]  as? String{
+                    var shoe1 =  json["shoeID"]  as? String//,
+                    //var shoe2 =  json["shoeID-2"]  as? String,
+                    //var  shoe3 =  json["shoeID-3"]  as? String
+                {
             
                  
                     //self.returnedSimilarShoeList = [shoe1,shoe2,shoe3]
                      shoe1 =  shoe1.replacingOccurrences(of: "_Stock", with: "")
                      shoe1 = shoe1.replacingOccurrences(of: "_stock", with: "")
-                    shoe2 =  shoe2.replacingOccurrences(of: "_Stock", with: "")
+                 /*   shoe2 =  shoe2.replacingOccurrences(of: "_Stock", with: "")
                     shoe2 = shoe2.replacingOccurrences(of: "_stock", with: "")
                     shoe3 =  shoe3.replacingOccurrences(of: "_Stock", with: "")
-                    shoe3 = shoe3.replacingOccurrences(of: "_stock", with: "")
-                    self.detailsAPICall(shoeID: shoe1)
-                    self.detailsAPICall(shoeID: shoe2)
-                    self.detailsAPICall(shoeID: shoe3)
+                    shoe3 = shoe3.replacingOccurrences(of: "_stock", with: "") */
+                    let check = solematesViewController().check(shoeID: shoe1)
+                    if(check != nil){
+                        self.similarShoeList.append(check!)
+                    }else{
+                        self.detailsAPICall(shoeID: shoe1)
+                    }
+                 //   self.detailsAPICall(shoeID: shoe2)
+                  //  self.detailsAPICall(shoeID: shoe3)
                     
                     //return shoeID
                 }
@@ -269,10 +287,10 @@ class shoeDetailsViewController: UIViewController, UITableViewDataSource{
                 ///Shoe object created with data from AWS
                 let shoeDecoded = shoe(image:decodedImage , name: receivedShoe.shoeTitle,
                                        desc: receivedShoe.shoeDescription,
-                                       price: priceDouble!)
+                                       price: priceDouble!, url:receivedShoe.url)
                 self.similarShoeList.append(shoeDecoded)
                 DispatchQueue.main.async {
-                    dump(self.similarShoeList)
+                    //dump(self.similarShoeList)
                     ///Send shoe to popup content handler to display
               //      self.popUpViewContentHandler(shoe: shoeDecoded)
                     self.similarShoesTableView.reloadData()
@@ -300,13 +318,16 @@ class shoeDetailsViewController: UIViewController, UITableViewDataSource{
     private func loadSample() {
         let shoe1 = shoe(image: #imageLiteral(resourceName: "Powerphases"), name: "Yeezy Powerphase",
                          desc: "The shoe is highlighted by its all-black leather upper, then featuring gold Calabasas branding alongside, in addition to adidas tagging in green and red. Tonal laces accompany to round out the design details.",
-                         price: 120)
+                         price: 120,
+                         url:"google.com/")
         let shoe2 = shoe(image: #imageLiteral(resourceName: "Powerphases"), name: "Yeezy Powerphase",
                          desc: "The shoe is highlighted by its all-black leather upper, then featuring gold Calabasas branding alongside, in addition to adidas tagging in green and red. Tonal laces accompany to round out the design details.",
-                         price: 120)
+                         price: 120,
+                         url:"google.com/")
         let shoe3 = shoe(image: #imageLiteral(resourceName: "Powerphases"), name: "Yeezy Powerphase",
                          desc: "The shoe is highlighted by its all-black leather upper, then featuring gold Calabasas branding alongside, in addition to adidas tagging in green and red. Tonal laces accompany to round out the design details.",
-                         price: 120)
+                         price: 120,
+                         url:"google.com/")
         similarShoeList += [shoe1,shoe2,shoe3]
 
     }

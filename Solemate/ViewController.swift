@@ -21,6 +21,8 @@ struct receivedShoeStruct: Codable{
     var shoeDescription: String
     var shoePrice: String
     var shoeImage: String
+    var lowestPrice: String
+    var url: String
 }
 
 
@@ -491,12 +493,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
                 let decodedImage = UIImage(data: dataDecoded)!
             
                 //convert response price to double
-                let priceDouble = Double(receivedShoe.shoePrice.replacingOccurrences(of: "$", with: ""))
-
+                let priceDouble = Double(receivedShoe.lowestPrice.replacingOccurrences(of: "$", with: ""))
+            
                ///Shoe object created with data from AWS
               let shoeDecoded = shoe(image:decodedImage , name: receivedShoe.shoeTitle,
                                      desc: receivedShoe.shoeDescription,
-                                     price: priceDouble!)
+                                     price: priceDouble!,url: receivedShoe.url)
                 self.identifiedShoe = shoeDecoded
                 DispatchQueue.main.async {
                     ///Send shoe to popup content handler to display

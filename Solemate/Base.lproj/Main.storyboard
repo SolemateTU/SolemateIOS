@@ -458,17 +458,7 @@
                                                 </constraints>
                                             </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YdZ-p4-9Um">
-                                                <rect key="frame" x="8" y="358" width="287" height="28"/>
-                                                <edgeInsets key="layoutMargins" top="8" left="8" bottom="4" right="8"/>
-                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="19"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Price" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OZA-CN-Qf0">
-                                                <rect key="frame" x="307" y="358" width="60" height="28"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" constant="60" id="adL-9b-ikd"/>
-                                                </constraints>
+                                                <rect key="frame" x="8" y="358" width="282" height="28"/>
                                                 <edgeInsets key="layoutMargins" top="8" left="8" bottom="4" right="8"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="19"/>
                                                 <nil key="textColor"/>
@@ -556,15 +546,40 @@
                                                     </tableViewCell>
                                                 </prototypes>
                                             </tableView>
+                                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YWG-R0-dqj">
+                                                <rect key="frame" x="292" y="352" width="75" height="34"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="75" id="rbg-u5-lby"/>
+                                                </constraints>
+                                                <edgeInsets key="layoutMargins" top="8" left="8" bottom="8" right="0.0"/>
+                                                <inset key="contentEdgeInsets" minX="0.0" minY="0.0" maxX="-20" maxY="-9"/>
+                                                <inset key="titleEdgeInsets" minX="0.0" minY="0.0" maxX="-8" maxY="-5"/>
+                                                <state key="normal">
+                                                    <attributedString key="attributedTitle">
+                                                        <fragment content="Price">
+                                                            <attributes>
+                                                                <color key="NSColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                <font key="NSFont" size="19" name=".AppleSystemUIFontEmphasized"/>
+                                                                <paragraphStyle key="NSParagraphStyle" alignment="right" lineBreakMode="clipping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                                                <integer key="NSUnderline" value="1"/>
+                                                            </attributes>
+                                                        </fragment>
+                                                    </attributedString>
+                                                </state>
+                                                <connections>
+                                                    <action selector="shoePriceLink:" destination="Vyc-0R-tYA" eventType="touchUpInside" id="sBg-bk-R7k"/>
+                                                </connections>
+                                            </button>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="trailing" secondItem="unj-H1-Itz" secondAttribute="trailing" id="93t-75-O0h"/>
+                                            <constraint firstItem="YWG-R0-dqj" firstAttribute="leading" secondItem="YdZ-p4-9Um" secondAttribute="trailing" constant="2" id="E1q-US-kik"/>
                                             <constraint firstItem="YdZ-p4-9Um" firstAttribute="top" secondItem="Qr3-3g-qMF" secondAttribute="bottom" constant="8" id="Jbr-Li-Q9j"/>
-                                            <constraint firstItem="OZA-CN-Qf0" firstAttribute="top" secondItem="Qr3-3g-qMF" secondAttribute="bottom" constant="8" id="JcN-VM-VU6"/>
                                             <constraint firstAttribute="trailing" secondItem="Qr3-3g-qMF" secondAttribute="trailing" id="M37-fG-1xD"/>
-                                            <constraint firstAttribute="trailing" secondItem="OZA-CN-Qf0" secondAttribute="trailing" constant="8" id="Mzz-IF-QVY"/>
+                                            <constraint firstItem="YWG-R0-dqj" firstAttribute="top" secondItem="Qr3-3g-qMF" secondAttribute="bottom" constant="3" id="OHB-8a-6lY"/>
                                             <constraint firstItem="kff-5m-pX0" firstAttribute="leading" secondItem="9dI-sL-qfB" secondAttribute="leading" constant="8" id="Ppz-bj-UBE"/>
+                                            <constraint firstAttribute="trailing" secondItem="YWG-R0-dqj" secondAttribute="trailing" constant="8" id="TOl-CK-aV3"/>
                                             <constraint firstItem="scL-G8-CLt" firstAttribute="leading" secondItem="9dI-sL-qfB" secondAttribute="leading" constant="8" id="YBD-j0-3Wr"/>
                                             <constraint firstItem="YdZ-p4-9Um" firstAttribute="leading" secondItem="9dI-sL-qfB" secondAttribute="leading" constant="8" id="amn-te-Pft"/>
                                             <constraint firstItem="scL-G8-CLt" firstAttribute="top" secondItem="YdZ-p4-9Um" secondAttribute="bottom" id="bxM-UN-jcA"/>
@@ -573,7 +588,6 @@
                                             <constraint firstItem="unj-H1-Itz" firstAttribute="top" secondItem="kff-5m-pX0" secondAttribute="bottom" constant="8" id="hJO-1i-Pb9"/>
                                             <constraint firstItem="Qr3-3g-qMF" firstAttribute="top" secondItem="9dI-sL-qfB" secondAttribute="top" id="l2f-Au-d0v"/>
                                             <constraint firstItem="kff-5m-pX0" firstAttribute="top" secondItem="scL-G8-CLt" secondAttribute="bottom" constant="8" id="mfO-My-2Tk"/>
-                                            <constraint firstItem="OZA-CN-Qf0" firstAttribute="leading" secondItem="YdZ-p4-9Um" secondAttribute="trailing" constant="12" id="qod-Vo-pjw"/>
                                             <constraint firstItem="Qr3-3g-qMF" firstAttribute="leading" secondItem="9dI-sL-qfB" secondAttribute="leading" id="vAB-PQ-AHJ"/>
                                         </constraints>
                                     </view>
@@ -605,13 +619,13 @@
                         <outlet property="shoeDescription" destination="scL-G8-CLt" id="ju2-EM-FQx"/>
                         <outlet property="shoeImage" destination="Qr3-3g-qMF" id="PvT-aq-S7c"/>
                         <outlet property="shoeName" destination="YdZ-p4-9Um" id="Wbf-af-BYh"/>
-                        <outlet property="shoePrice" destination="OZA-CN-Qf0" id="GXg-uU-TqQ"/>
+                        <outlet property="shoePrice" destination="YWG-R0-dqj" id="YaU-5D-TNJ"/>
                         <outlet property="similarShoesTableView" destination="unj-H1-Itz" id="dHP-iy-xMw"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NCD-mK-wev" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2537" y="-1249"/>
+            <point key="canvasLocation" x="2536.8000000000002" y="-1249.0254872563719"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="AMn-OM-Ccb">
