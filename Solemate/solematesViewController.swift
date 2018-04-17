@@ -143,23 +143,19 @@ class solematesViewController: UITableViewController{
         
     }
     /**
-     Allows Camera view to add new shoes to the list
+     Allows Detail view to check whether the recommended shoe id is already saved locally
      - Parameters:
      - shoe: Shoe that was recognized
-     - Returns: shoe: a shoe that it either has saved or a shoe with name _
+     - Returns: shoe: a shoe that it either has saved or nil
      */
     public func check(shoeID:String)-> shoe?{
-       let shoeName = shoeID.replacingOccurrences(of: "_", with: "")
-        
+       let shoeName = shoeID.replacingOccurrences(of: "_", with: " ")
+        print(shoeName)
         if let savedShoes = loadShoes() {
             shoeList += savedShoes
-            
-            print("shoeList.count ", shoeList.count)
             for i in 0...shoeList.count-1{
                 if(shoeList[i].name == shoeName){
                     return shoeList[i]
-                }else {
-                    return nil
                 }
             }
         }

@@ -202,8 +202,12 @@ class shoeDetailsViewController: UIViewController, UITableViewDataSource{
                     shoe3 =  shoe3.replacingOccurrences(of: "_Stock", with: "")
                     shoe3 = shoe3.replacingOccurrences(of: "_stock", with: "") */
                     let check = solematesViewController().check(shoeID: shoe1)
+                  
                     if(check != nil){
                         self.similarShoeList.append(check!)
+                        DispatchQueue.main.async {
+                        self.similarShoesTableView.reloadData()
+                        }
                     }else{
                         self.detailsAPICall(shoeID: shoe1)
                     }
@@ -282,7 +286,7 @@ class shoeDetailsViewController: UIViewController, UITableViewDataSource{
                 let decodedImage = UIImage(data: dataDecoded)!
                 
                 //convert response price to double
-                let priceDouble = Double(receivedShoe.shoePrice.replacingOccurrences(of: "$", with: ""))
+                let priceDouble = Double(receivedShoe.lowestPrice.replacingOccurrences(of: "$", with: ""))
                 
                 ///Shoe object created with data from AWS
                 let shoeDecoded = shoe(image:decodedImage , name: receivedShoe.shoeTitle,
