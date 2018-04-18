@@ -10,6 +10,10 @@ import Foundation
 import UIKit
 import os.log
 
+struct userPhotosStruct: Codable {
+    var shoeImage: String
+}
+
 class userPhotosViewController: UITableViewController{
     
     //call to AWS get user images with userID
