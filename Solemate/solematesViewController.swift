@@ -129,7 +129,7 @@ class solematesViewController: UITableViewController{
             shoeList += savedShoes
 
         print("shoeList.count ", shoeList.count)
-        for i in 0...shoeList.count-1{
+        for i in 0..<shoeList.count{
             if(shoeList[i].name == shoe.name){
                 break
             }else if (i == shoeList.count-1){
@@ -146,7 +146,7 @@ class solematesViewController: UITableViewController{
      Allows Detail view to check whether the recommended shoe id is already saved locally
      - Parameters:
         - listToCheck: List of shoe IDs to be checked
-     - Returns: [shoe]: a list of shoes that we have saved corresponding to the IDs we checked
+     - Returns: [shoe?]: A list of shoes that we have saved or nil if we don't, indexes correspond to the listTocheck indexes
      */
     public func checkPersistentStorage(listToCheck:[String])-> [shoe?]{
         var listToReturn: [shoe?] = [nil,nil,nil]
@@ -157,7 +157,9 @@ class solematesViewController: UITableViewController{
                 let shoeName = listToCheck[i].replacingOccurrences(of: "_", with: " ")
                 for j in 0..<shoeList.count{
                     if (shoeList[j].name == shoeName){
-                        listToReturn[i] = shoeList[j]
+                         listToReturn[i] = shoeList[j]
+                         shoeList.remove(at: j)
+                        break
                     }
                     
                 }//end inner for

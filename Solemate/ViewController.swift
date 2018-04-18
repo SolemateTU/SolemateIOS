@@ -419,6 +419,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
                 shoeID = json["shoeID"]  as! String
                 shoeID =  shoeID.replacingOccurrences(of: "_Stock", with: "")
                 shoeID =  shoeID.replacingOccurrences(of: "_stock", with: "")
+                print(shoeID)
                 self.detailsAPICall(imageb64: base64String, shoeID: shoeID)
                 //return shoeID
                 }
@@ -480,7 +481,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
                 print("Error: did not receive data")
                 return
             }
-
+           
             // parse the result as JSON
             let decoder = JSONDecoder()
             do {

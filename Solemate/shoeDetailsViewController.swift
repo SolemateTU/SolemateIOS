@@ -276,21 +276,16 @@ class shoeDetailsViewController: UIViewController, UITableViewDataSource{
                 print("Error: did not receive data")
                 return
             }
-            let str = String(data: responseData, encoding: .utf8)
-            print(str)
-            
+
             // parse the result as JSON
             let decoder = JSONDecoder()
             do {
                 ///shoe recieved from AWS
                 let receivedShoe = try decoder.decode(receivedShoeStruct.self, from: responseData)
                 ///image data decoded from base 64
-           
                 let dataDecoded = Data(base64Encoded: receivedShoe.shoeImage, options: Data.Base64DecodingOptions.ignoreUnknownCharacters)!
-                
                 ///UIImage from the data decoded from base 64
                 let decodedImage = UIImage(data: dataDecoded)!
-                
                 //convert response price to double
                 let priceDouble = Double(receivedShoe.lowestPrice.replacingOccurrences(of: "$", with: ""))
                 
