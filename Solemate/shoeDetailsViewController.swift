@@ -95,7 +95,6 @@ class shoeDetailsViewController: UIViewController, UITableViewDataSource{
         shoeDescription.text = shoe.desc
         shoeDescription.sizeToFit()
         //price
-        print(shoe.price)
         let lowestPrice = "$\(Int(shoe.price))"
 //        shoePrice.setAttributedTitle(lowestPrice, for: .normal)
         if let attributedTitle = shoePrice.attributedTitle(for: .normal) {
@@ -147,7 +146,7 @@ class shoeDetailsViewController: UIViewController, UITableViewDataSource{
         let base64String = imageData.base64EncodedString(options: .lineLength64Characters)
         
         // Set up the URL request
-        let AWS_get_endpoint: String = "http://eb-flask.xuzpjp4dih.us-east-1.elasticbeanstalk.com"
+        let AWS_get_endpoint: String = "http://eb-rec-flask-dev.us-east-1.elasticbeanstalk.com"
         guard let url = URL(string: AWS_get_endpoint) else {
             print("Error: cannot create URL")
             return
@@ -188,28 +187,32 @@ class shoeDetailsViewController: UIViewController, UITableViewDataSource{
                 let str = String(data: responseData, encoding: .utf8)
                 print(str)
                 if let json = try JSONSerialization.jsonObject(with: responseData) as? [String: Any],
-                    var shoe1 =  json["shoeID"]  as? String//,
-                    //var shoe2 =  json["shoeID-2"]  as? String,
-                    //var  shoe3 =  json["shoeID-3"]  as? String
+                    var shoe1 =  json["shoeID-1"]  as? String,
+                    var shoe2 =  json["shoeID-2"]  as? String,
+                    var  shoe3 =  json["shoeID-3"]  as? String
                 {
             
-                 
-                    //self.returnedSimilarShoeList = [shoe1,shoe2,shoe3]
-                     shoe1 =  shoe1.replacingOccurrences(of: "_Stock", with: "")
-                     shoe1 = shoe1.replacingOccurrences(of: "_stock", with: "")
-                 /*   shoe2 =  shoe2.replacingOccurrences(of: "_Stock", with: "")
+                    //remove stock from ID
+                    shoe1 =  shoe1.replacingOccurrences(of: "_Stock", with: "")
+                    shoe1 = shoe1.replacingOccurrences(of: "_stock", with: "")
+                    shoe2 =  shoe2.replacingOccurrences(of: "_Stock", with: "")
                     shoe2 = shoe2.replacingOccurrences(of: "_stock", with: "")
                     shoe3 =  shoe3.replacingOccurrences(of: "_Stock", with: "")
-                    shoe3 = shoe3.replacingOccurrences(of: "_stock", with: "") */
-                    let check = solematesViewController().check(shoeID: shoe1)
-                  
-                    if(check != nil){
-                        self.similarShoeList.append(check!)
-                        DispatchQueue.main.async {
-                        self.similarShoesTableView.reloadData()
+                    shoe3 = shoe3.replacingOccurrences(of: "_stock", with: "")
+                    
+                    ///List of recommended shoe IDs
+                    let recommendedShoeIDs =  [shoe1,shoe2,shoe3]
+                    ///List of recommended shoes we have in persistent storage
+                    let check = solematesViewController().checkPersistentStorage(listToCheck: recommendedShoeIDs)
+                    for i in 0..<check.count{
+                        if (check[i] != nil){
+                            self.similarShoeList.append(check[i]!)
+                            DispatchQueue.main.async {
+                                self.similarShoesTableView.reloadData()
+                            }
+                        }else{
+                            self.detailsAPICall(shoeID: recommendedShoeIDs[i])
                         }
-                    }else{
-                        self.detailsAPICall(shoeID: shoe1)
                     }
                  //   self.detailsAPICall(shoeID: shoe2)
                   //  self.detailsAPICall(shoeID: shoe3)
@@ -273,6 +276,8 @@ class shoeDetailsViewController: UIViewController, UITableViewDataSource{
                 print("Error: did not receive data")
                 return
             }
+            let str = String(data: responseData, encoding: .utf8)
+            print(str)
             
             // parse the result as JSON
             let decoder = JSONDecoder()
@@ -280,6 +285,7 @@ class shoeDetailsViewController: UIViewController, UITableViewDataSource{
                 ///shoe recieved from AWS
                 let receivedShoe = try decoder.decode(receivedShoeStruct.self, from: responseData)
                 ///image data decoded from base 64
+           
                 let dataDecoded = Data(base64Encoded: receivedShoe.shoeImage, options: Data.Base64DecodingOptions.ignoreUnknownCharacters)!
                 
                 ///UIImage from the data decoded from base 64

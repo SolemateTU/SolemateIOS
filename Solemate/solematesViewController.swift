@@ -145,21 +145,25 @@ class solematesViewController: UITableViewController{
     /**
      Allows Detail view to check whether the recommended shoe id is already saved locally
      - Parameters:
-     - shoe: Shoe that was recognized
-     - Returns: shoe: a shoe that it either has saved or nil
+        - listToCheck: List of shoe IDs to be checked
+     - Returns: [shoe]: a list of shoes that we have saved corresponding to the IDs we checked
      */
-    public func check(shoeID:String)-> shoe?{
-       let shoeName = shoeID.replacingOccurrences(of: "_", with: " ")
-        print(shoeName)
+    public func checkPersistentStorage(listToCheck:[String])-> [shoe?]{
+        var listToReturn: [shoe?] = [nil,nil,nil]
+ 
         if let savedShoes = loadShoes() {
             shoeList += savedShoes
-            for i in 0...shoeList.count-1{
-                if(shoeList[i].name == shoeName){
-                    return shoeList[i]
-                }
-            }
-        }
-        return nil
+            for i in 0..<listToCheck.count{
+                let shoeName = listToCheck[i].replacingOccurrences(of: "_", with: " ")
+                for j in 0..<shoeList.count{
+                    if (shoeList[j].name == shoeName){
+                        listToReturn[i] = shoeList[j]
+                    }
+                    
+                }//end inner for
+            }//end outer for
+        }//end if
+        return listToReturn
     }
     
         /**
