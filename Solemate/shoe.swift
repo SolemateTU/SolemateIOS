@@ -22,6 +22,8 @@ class shoe: NSObject, NSCoding{
     var desc: String
     ///Shoe price
     var price: Double
+    ///Website to buy at lowest price
+    var url: String
     
     //MARK: Archiving Paths
     
@@ -36,14 +38,16 @@ class shoe: NSObject, NSCoding{
         static let name = "name"
         static let desc = "desc"
         static let price = "price"
+        static let url = "url"
     }
     
     
-     init(image: UIImage, name: String, desc: String, price:Double) {
+    init(image: UIImage, name: String, desc: String, price:Double, url:String) {
         self.image = image
         self.name =  name
         self.desc = desc
         self.price = price
+        self.url = url
     }
     
     
@@ -53,7 +57,7 @@ class shoe: NSObject, NSCoding{
         aCoder.encode(name, forKey: PropertyKey.name)
         aCoder.encode(desc, forKey: PropertyKey.desc)
         aCoder.encode(price, forKey: PropertyKey.price)
-
+        aCoder.encode(url, forKey: PropertyKey.url)
      }
      
     required convenience init?(coder aDecoder: NSCoder) {
@@ -77,8 +81,13 @@ class shoe: NSObject, NSCoding{
             os_log("Unable to decode the price for a shoe object.", log: OSLog.default, type: .debug)
             return nil
         }
+        
+        guard let url = aDecoder.decodeObject(forKey: PropertyKey.url) as? String else {
+            os_log("Unable to decode the url for a shoe object.", log: OSLog.default, type: .debug)
+            return nil
+        }
         //initialize as shoe object with these variables
-        self.init(image: image, name: name, desc: desc, price: price)
+        self.init(image: image, name: name, desc: desc, price: price, url: url)
         
     }
   

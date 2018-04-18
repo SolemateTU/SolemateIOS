@@ -21,6 +21,8 @@ struct receivedShoeStruct: Codable{
     var shoeDescription: String
     var shoePrice: String
     var shoeImage: String
+    var lowestPrice: String
+    var url: String
 }
 
 
@@ -357,7 +359,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     /**
      First AWS Request, sends selected image to Identification Function, once identified calls second AWS Function
      - Parameters:
-        - imageToSend: Base 64 Image String to be identified
+        - imageToSend: Image to be identified
      */ 
     func identificationAPICall(imageToSend:UIImage)  {
         //compress image before sending, as there is a limit.
@@ -417,6 +419,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
                 shoeID = json["shoeID"]  as! String
                 shoeID =  shoeID.replacingOccurrences(of: "_Stock", with: "")
                 shoeID =  shoeID.replacingOccurrences(of: "_stock", with: "")
+                print(shoeID)
                 self.detailsAPICall(imageb64: base64String, shoeID: shoeID)
                 //return shoeID
                 }
@@ -478,7 +481,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
                 print("Error: did not receive data")
                 return
             }
-
+           
             // parse the result as JSON
             let decoder = JSONDecoder()
             do {
@@ -491,12 +494,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
                 let decodedImage = UIImage(data: dataDecoded)!
             
                 //convert response price to double
-                let priceDouble = Double(receivedShoe.shoePrice.replacingOccurrences(of: "$", with: ""))
-
+                let priceDouble = Double(receivedShoe.lowestPrice.replacingOccurrences(of: "$", with: ""))
+            
                ///Shoe object created with data from AWS
               let shoeDecoded = shoe(image:decodedImage , name: receivedShoe.shoeTitle,
                                      desc: receivedShoe.shoeDescription,
-                                     price: priceDouble!)
+                                     price: priceDouble!,url: receivedShoe.url)
                 self.identifiedShoe = shoeDecoded
                 DispatchQueue.main.async {
                     ///Send shoe to popup content handler to display
