@@ -253,15 +253,8 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="My Solemates" id="mXN-R1-Elu">
                         <barButtonItem key="backBarButtonItem" title="❤️" id="JTw-QL-9Y9"/>
-                        <barButtonItem key="rightBarButtonItem" title="My Photos" id="flp-tO-va2">
-                            <connections>
-                                <segue destination="0HT-dp-DXq" kind="show" id="l8f-Nl-dOF"/>
-                            </connections>
-                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="My Photos" id="flp-tO-va2"/>
                     </navigationItem>
-                    <connections>
-                        <segue destination="0HT-dp-DXq" kind="show" id="zYc-69-KDc"/>
-                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="y6i-ub-Aea" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -649,8 +642,7 @@
         <image name="iosCameraRoll" width="720" height="720"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="wOA-CW-s4e"/>
-        <segue reference="zYc-69-KDc"/>
+        <segue reference="M4K-uw-JJ1"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" cocoaTouchSystemColor="darkTextColor"/>
 </document>

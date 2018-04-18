@@ -10,21 +10,24 @@ import Foundation
 import UIKit
 import os.log
 
-struct userPhotosStruct: Codable {
-    var shoeImage: String
-}
+//struct userPhotosStruct: Codable {
+//    var shoeImage: String
+//}
 
 class userPhotosViewController: UITableViewController{
+    
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        
+    }
     
     //call to AWS get user images with userID
     
     // a way to, For Each, display the images returned as cells to the screen
-
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-    }
+//
+//    override func viewDidLoad() {
+//        super.viewDidLoad()
+//    }
  
     
 }//end class
