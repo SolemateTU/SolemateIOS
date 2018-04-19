@@ -34,6 +34,7 @@ class shoeDetailsViewController: UIViewController, UITableViewDataSource{
     @IBOutlet weak var navTitle: UINavigationItem!
      var similarShoeList = [shoe]()
     var returnedSimilarShoeList : [String]!
+    
     override func viewDidLoad() {
         //if shoe is not empty
         if selectedShoe != nil {
@@ -109,6 +110,7 @@ class shoeDetailsViewController: UIViewController, UITableViewDataSource{
             UIApplication.shared.openURL(url)
         }
     }
+    
     //Send shoe object selected to detail vew controller
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
@@ -168,13 +170,14 @@ class shoeDetailsViewController: UIViewController, UITableViewDataSource{
         }
         
         //  print(request.value(forHTTPHeaderField: "Content-Type"))
-        let task = session.dataTask(with: request) {
+        let recommendationTask = session.dataTask(with: request) {
             (data, response, error) in
             // check for any errors
             guard error == nil else {
                 print("error calling endpoint")
                 print(error!)
-                
+                //resume the recommendation task
+                self.recommendationAPICall(imageToSend: self.selectedShoe.image)
                 return
             }
             // make sure we got data
@@ -213,11 +216,8 @@ class shoeDetailsViewController: UIViewController, UITableViewDataSource{
                         }else{
                             self.detailsAPICall(shoeID: recommendedShoeIDs[i])
                         }
-                    }
-                 //   self.detailsAPICall(shoeID: shoe2)
-                  //  self.detailsAPICall(shoeID: shoe3)
-                    
-                    //return shoeID
+                    }//end for
+
                 }
                 
             } catch let error {
@@ -225,7 +225,7 @@ class shoeDetailsViewController: UIViewController, UITableViewDataSource{
                 //self.detailsAPICall(imageb64: base64String, shoeID: shoeID)
             }
         }
-        task.resume()
+        recommendationTask.resume()
         
     }
     
@@ -267,6 +267,7 @@ class shoeDetailsViewController: UIViewController, UITableViewDataSource{
             // check for any errors
             guard error == nil else {
                 print("error calling endpoint")
+                
                 print(error!)
                 return
             }

@@ -560,7 +560,7 @@
                                                     </attributedString>
                                                 </state>
                                                 <connections>
-                                                    <action selector="shoePriceLink:" destination="Vyc-0R-tYA" eventType="touchUpInside" id="sBg-bk-R7k"/>
+                                                    <action selector="shoePriceLink:" destination="Vyc-0R-tYA" eventType="touchDown" id="eFt-la-vUW"/>
                                                 </connections>
                                             </button>
                                         </subviews>

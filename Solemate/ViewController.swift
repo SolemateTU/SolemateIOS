@@ -63,7 +63,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     
     ///Loader
     @IBOutlet weak var loader: UIImageView!
-    
+    ///Identification Task
+    var identificationTask: URLSessionTask?
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // Create a new scene
@@ -297,6 +299,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         //removes the selected image
         selectedView.isHidden = true
         
+        //cancel the identification task
+        identificationTask?.cancel()
+        
         //hide pop up view
         popUpView.isHidden = true
         recognizedImage.isHidden = true
@@ -396,7 +401,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         }
        
       //  print(request.value(forHTTPHeaderField: "Content-Type"))
-        let task = session.dataTask(with: request) {
+       identificationTask = session.dataTask(with: request) {
             (data, response, error) in
             // check for any errors
             guard error == nil else {
@@ -413,14 +418,24 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
             }
         do {
             //Debugging response
-           // let str = String(data: responseData, encoding: .utf8)
-           // print(str)
+            let str = String(data: responseData, encoding: .utf8)
+            print(str)
             if let json = try JSONSerialization.jsonObject(with: responseData) as? [String: Any] {
                 shoeID = json["shoeID"]  as! String
                 shoeID =  shoeID.replacingOccurrences(of: "_Stock", with: "")
                 shoeID =  shoeID.replacingOccurrences(of: "_stock", with: "")
-                print(shoeID)
-                self.detailsAPICall(imageb64: base64String, shoeID: shoeID)
+  
+                ///Check if  we have this shoe in persistent storage
+                let check = solematesViewController().checkPersistentStorage(listToCheck: [shoeID])
+                    if (check[0] != nil){
+                        self.identifiedShoe = check[0]!
+                        DispatchQueue.main.async {
+                            ///Send shoe to popup content handler to display
+                                self.popUpViewContentHandler(shoe: check[0]!)
+                        }
+                    }
+                    self.detailsAPICall(imageb64: base64String,shoeID: shoeID)
+                    
                 //return shoeID
                 }
             
@@ -429,7 +444,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
             //self.detailsAPICall(imageb64: base64String, shoeID: shoeID)
         }
     }
-            task.resume()
+        identificationTask?.resume()
         
 }
     
