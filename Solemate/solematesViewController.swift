@@ -125,22 +125,28 @@ class solematesViewController: UITableViewController{
             - shoe: Shoe that was recognized
         */
        public func addShoe(shoe:shoe){
-        if let savedShoes = loadShoes() {
+        if let savedShoes = loadShoes(){
             shoeList += savedShoes
-
-        print("shoeList.count ", shoeList.count)
+      
         for i in 0..<shoeList.count{
             if(shoeList[i].name == shoe.name){
                 break
-            }else if (i == shoeList.count-1){
+            }else if i == shoeList.count-1{
                 shoeList.append(shoe)
                 saveShoes()
             }
-        }
+                if (shoeList.count == 0){
+                    shoeList.append(shoe)
+                    saveShoes()
+                    break
+                }
+            }
         }else{
             shoeList.append(shoe)
+            saveShoes()
         }
-        
+        print("shoeList.count ", shoeList.count)
+
     }
     /**
      Allows Detail view to check whether the recommended shoe id is already saved locally
