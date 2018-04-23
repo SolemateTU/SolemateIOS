@@ -253,15 +253,12 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="My Solemates" id="mXN-R1-Elu">
                         <barButtonItem key="backBarButtonItem" title="❤️" id="JTw-QL-9Y9"/>
-                        <barButtonItem key="rightBarButtonItem" title="My Photos" id="flp-tO-va2">
+                        <barButtonItem key="rightBarButtonItem" title="📤" id="flp-tO-va2">
                             <connections>
-                                <segue destination="0HT-dp-DXq" kind="show" id="9eK-qX-RyW"/>
+                                <segue destination="0HT-dp-DXq" kind="show" id="Spd-c6-SBx"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
-                    <connections>
-                        <segue destination="0HT-dp-DXq" kind="show" id="Ddi-XR-ryP"/>
-                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="y6i-ub-Aea" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -283,11 +280,17 @@
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="235.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Vn0-bv-ma5">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Vn0-bv-ma5">
                                             <rect key="frame" x="67" y="0.0" width="240" height="236"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         </imageView>
                                     </subviews>
+                                    <constraints>
+                                        <constraint firstItem="Vn0-bv-ma5" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="neo-Ci-7TN" secondAttribute="leading" constant="67" id="AGm-Kz-8Gs"/>
+                                        <constraint firstItem="Vn0-bv-ma5" firstAttribute="centerY" secondItem="neo-Ci-7TN" secondAttribute="centerY" id="QRX-0t-4GH"/>
+                                        <constraint firstAttribute="trailing" relation="lessThanOrEqual" secondItem="Vn0-bv-ma5" secondAttribute="trailing" constant="68" id="XTP-p9-0mk"/>
+                                        <constraint firstItem="Vn0-bv-ma5" firstAttribute="centerX" secondItem="neo-Ci-7TN" secondAttribute="centerX" id="cuj-aJ-7Oh"/>
+                                        <constraint firstItem="Vn0-bv-ma5" firstAttribute="top" secondItem="neo-Ci-7TN" secondAttribute="top" id="k19-Kq-GQW"/>
+                                    </constraints>
                                 </tableViewCellContentView>
                             </tableViewCell>
                         </prototypes>
@@ -296,6 +299,7 @@
                             <outlet property="delegate" destination="0HT-dp-DXq" id="7Cz-hC-PDh"/>
                         </connections>
                     </tableView>
+                    <navigationItem key="navigationItem" title="My Photos" id="Urk-4E-3kA"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3cM-B3-apw" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -516,7 +520,6 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="M4K-uw-JJ1"/>
-        <segue reference="9eK-qX-RyW"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" cocoaTouchSystemColor="darkTextColor"/>
 </document>
