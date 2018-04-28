@@ -39,7 +39,7 @@ class userPhotosViewController: UITableViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        getUserPhotosAWS(userID: "tug46894")
+        getUserPhotosAWS(userID: "will")
 
         sampleData = []
 

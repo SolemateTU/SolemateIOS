@@ -455,7 +455,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         - shoeID: Identified shoe
      */
     func detailsAPICall(imageb64: String, shoeID: String){
-        let imageDataToSend = shoeToSendStruct(userID: "harry", img: imageb64, shoeID: shoeID)
+        let imageDataToSend = shoeToSendStruct(userID: "will", img: imageb64, shoeID: shoeID)
         
         let encoder = JSONEncoder()
         //below can be removed later
